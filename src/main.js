@@ -10,8 +10,13 @@ import Vuex from 'vuex'
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
 import routes from './routes'
-import Mock from './mock'
-Mock.bootstrap();
+//import Mock from './mock'      -----------mock
+//Mock.bootstrap();              -----------mock
+import axios from 'axios';
+Vue.prototype.$ajax = axios;
+import qs from 'qs';
+
+
 import 'font-awesome/css/font-awesome.min.css'
 
 Vue.use(ElementUI)

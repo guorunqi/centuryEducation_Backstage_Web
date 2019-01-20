@@ -7,7 +7,7 @@
     <el-form-item prop="checkPass">
       <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+    <el-checkbox v-model="checked" checked class="remember">记住密码11</el-checkbox>
     <el-form-item style="width:100%;">
       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
@@ -16,8 +16,8 @@
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
   //import NProgress from 'nprogress'
+  import qs from 'qs';
   export default {
     data() {
       return {
@@ -51,20 +51,22 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            requestLogin(loginParams).then(data => {
-              this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                });
-              } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/table' });
-              }
-            });
+            this.$ajax({
+                  method: 'post',
+                  url: '/api/login',
+                  data: qs.stringify(loginParams)
+               }).then(data => {debugger
+                if (data.data== true) {
+                    //sessionStorage.setItem('user', JSON.stringify(user));
+                    this.$router.push({ path: '/table' });
+                } else {
+                    //this.$message({
+                    //  message: msg,
+                    //  type: 'error'
+                    //});
+                }
+               });
+
           } else {
             console.log('error submit!!');
             return false;
