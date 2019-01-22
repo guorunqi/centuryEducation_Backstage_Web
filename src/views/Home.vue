@@ -75,7 +75,7 @@
 	export default {
 		data() {
 			return {
-				sysName:'VUEADMIN',
+				sysName:'世纪教育',
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',
@@ -130,7 +130,7 @@
 			if (user) {
 				user = JSON.parse(user);
 				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
+				this.sysUserAvatar = user.picturePath || '';
 			}
 
 		}

@@ -17,6 +17,9 @@ Vue.prototype.$ajax = axios;
 import qs from 'qs';
 
 
+Vue.config.devtools = true;
+
+
 import 'font-awesome/css/font-awesome.min.css'
 
 Vue.use(ElementUI)
