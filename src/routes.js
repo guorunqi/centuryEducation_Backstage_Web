@@ -9,6 +9,7 @@ import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
+import zzgl from './views/zzgl.vue'
 
 let routes = [
     {
@@ -42,7 +43,7 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/zzgl', component: Page6, name: '组织管理' }
+            { path: '/zzgl', component: zzgl, name: '组织管理' }
         ]
     },
     {

@@ -13,6 +13,7 @@ import routes from './routes'
 //import Mock from './mock'      -----------mock
 //Mock.bootstrap();              -----------mock
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 Vue.prototype.$ajax = axios;
 import qs from 'qs';
 
