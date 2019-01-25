@@ -1,5 +1,6 @@
 import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
+import common from './common/js/common.js'
 import App from './App'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
@@ -26,6 +27,7 @@ import 'font-awesome/css/font-awesome.min.css'
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(common)
 
 //NProgress.configure({ showSpinner: false });
 

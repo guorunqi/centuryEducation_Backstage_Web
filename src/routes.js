@@ -10,7 +10,8 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import zzgl from './views/zzgl.vue'
-
+import xmgl from './views/projectManagement/projectManagementList.vue'
+import xmxq from './views/projectManagement/projectManagementListDetail.vue'
 let routes = [
     {
         path: '/login',
@@ -29,11 +30,18 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '',
+        name: '项目管理',
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/xmgl', component: Page6, name: '项目管理' }
+            { path: '/xmgl', component: xmgl, name: '项目管理' },
+            {
+                //项目管理 详情页面
+                path: '/xmxq/:id',
+                component: xmxq,
+                name: '项目详情',
+                hidden: true
+            },
         ]
     },
     {
