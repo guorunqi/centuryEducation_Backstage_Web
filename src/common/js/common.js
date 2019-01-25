@@ -11,7 +11,6 @@ export default {
                 url: '/api/getDictAllByDictTypeId',
                 data: qs.stringify(loginParams)
             }).then(data => {
-                debugger
                 if (data.data.code== "true"){
                     Function(data.data.data);
                 }
@@ -25,6 +24,20 @@ export default {
                 method: 'post',
                 url: '/api/selectAllOrg',
                 data: qs.stringify(loginParams)
+            }).then(data => {
+                if (data.data.code== "true"){
+                    Function(data.data.data);
+                }
+            })
+        };
+        //根据学校ID数组，查询对应的学校
+        Vue.prototype.selectSchoolListByIdList = function(IdList,Function){
+            var me = this;
+            var loginParams = {IdList};
+            this.$ajax({
+                method: 'post',
+                url: '/api/selectSchoolListByIdList',
+                data: loginParams
             }).then(data => {
                 if (data.data.code== "true"){
                     Function(data.data.data);

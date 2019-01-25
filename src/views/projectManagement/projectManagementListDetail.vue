@@ -101,16 +101,8 @@
             <el-dialog title="添加专家" :visible.sync="outerVisible">
                 <el-form ref="form" :model="form" label-width="auto">
                     <el-form-item label="评估学校：">
-                        <el-select v-model="请选择" filterable placeholder="请选择">
-                            <el-select v-model="project.orgs"  multiple  placeholder="请选择">
-                                <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
-                            </el-select>
-                           <!-- <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>-->
+                        <el-select v-model="project.pgxx_orgs"  multiple  placeholder="请选择">
+                            <el-option v-for="item in Org_select" :key="item.id" :label="item.name" :value="item.code"></el-option>
                         </el-select>
                     </el-form-item>
 
@@ -198,8 +190,10 @@
                 project: {
                     classOne: '',
                     classTwo: '',
-                    orgs: []
+                    orgs: [],
+                    pgxx_orgs:'',
                 },
+                Org_select:[],
                 Orgitems: [],
                 id: this.$route.params.id,
                 outerVisible: false,
@@ -248,11 +242,16 @@
                 this.multipleSelection = val;
             },
             addZZ(){
-                this.outerVisible = true
-                debugger
-                var s = this.project.orgs
-                debugger
-            }
+                var _this = this
+                _this.outerVisible = true
+                this.selectSchoolListByIdList(this.project.orgs,function(data){
+                    debugger
+                    _this.Org_select = data;
+                    console.log(_this.Org_select)
+                    debugger
+                })
+            },
+
         },
         mounted() {
             var _this = this;
@@ -262,12 +261,10 @@
             });
             //加载项目一级分类
             this.getDictAllByDictTypeId('PROJECT_CLASS_ONE',function(data){
-                debugger
                 _this.classOnes = data;
             });
             //加载项目二级分类
             this.getDictAllByDictTypeId('PROJECT_CLASS_TWO',function(data){
-                debugger
                 _this.classTwos = data;
             });
         },
