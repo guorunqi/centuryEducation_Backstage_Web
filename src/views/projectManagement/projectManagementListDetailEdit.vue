@@ -24,7 +24,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="结束时间">
-                <el-date-picker type="date" placeholder="选择日期" v-model="project.endTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" v-model="project.endTime"  style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
             <el-button type="primary" @click="closeProject">关闭项目</el-button>
 
@@ -60,7 +60,7 @@
                     <el-table-column prop="classTwo" label="二级分类" width="150"></el-table-column>
                     <el-table-column fixed="right"              label="操作"      width="80">
                         <template slot-scope="scope">
-                            <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, filds)" type="text" size="small">移除</el-button>
+                            <el-button @click.native.prevent="deleteSelectionTableRowFiled(scope.$index, filds)" type="text" size="small">移除</el-button>
                         </template>
                     </el-table-column>
             </el-table-column>
@@ -105,12 +105,12 @@
 
         <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
             <el-table-column label="涉及专家">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="SpecialistSchool"    label="评估学校"  width="300"></el-table-column>
-                <el-table-column prop="SpecialistName"      label="姓名"      width="150" ></el-table-column>
-                <el-table-column prop="SpecialistPhone"     label="电话"      width="150"></el-table-column>
-                <el-table-column prop="SpecialistRemarks"   label="备注"      width="150"></el-table-column>
-                <el-table-column fixed="right"              label="操作"      width="80">
+                <el-table-column type="selection"                        width="55"></el-table-column>
+                <el-table-column prop="OrgCode"        label="评估学校"  width="300"></el-table-column>
+                <el-table-column prop="userName"        label="姓名"      width="150" ></el-table-column>
+                <el-table-column prop="userPhone"       label="电话"      width="150"></el-table-column>
+                <el-table-column prop="userRemarks"     label="备注"      width="150"></el-table-column>
+                <el-table-column fixed="right"          label="操作"      width="80">
                     <template slot-scope="scope">
                         <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, SpecialistTable)" type="text" size="small">移除</el-button>
                     </template>
@@ -139,7 +139,6 @@
     import qs from 'qs';
     import  router from "../../routes.js"
     export default {
-        name: "projectManagementList",
         data() {
             return {
                 classOnes: '',//一级分类
@@ -148,6 +147,7 @@
                 //保存数据
                 //**********************************
                 project: {  //                     *
+                    id:'',
                     endTime:'',//                  *
                     startTime:'',//               *
                     classOne: '',//                *
@@ -227,7 +227,12 @@
                     for(let key  in AllPolicyDocument){
                         var value = AllPolicyDocument[key];
                         if(key == "id" && value == selectAllPolicyDocumentData){
-                            _this.filds.push(AllPolicyDocument)
+                            _this.AjaxJson("insertProjectPolicyDocument",{projectId:_this.project.id,policyDocumentId:AllPolicyDocument.id},function(data){
+                                if (data.data.code== "true"){
+                                    _this.filds.push(AllPolicyDocument)
+                                }
+                            });
+
                         }
                     }
                 }
@@ -238,36 +243,83 @@
                 var _this = this
                 var selectSpecialist = _this.selectSpecialist
                 var AllSpecialist = _this.AllSpecialist
+                debugger
                 for ( var i = 0; i <AllSpecialist.length; i++){
                     var AllSpecia = AllSpecialist[i];
                     for(let key  in AllSpecia){
                         var value = AllSpecia[key];
                        if(key == "code" && value == selectSpecialist){
-                           obj.SpecialistName = AllSpecia.name;
-                           obj.SpecialistId = AllSpecia.id;
-                           obj.SpecialistPhone = AllSpecia.phone;
-                           obj.SpecialistRemarks = AllSpecia.remarks;
-                           obj.SpecialistSchool = _this.pgxx_orgs
-                           _this.SpecialistTable.push(obj)
+                           _this.AjaxJson("insertProjectOrgUser",{projectId:_this.project.id,userId:AllSpecia.id,orgCode:_this.pgxx_orgs},function(data){
+                               if (data.data.code== "true"){
+                                   debugger
+                                   obj.userName = AllSpecia.name;
+                                   obj.SpecialistId = AllSpecia.id;
+                                   obj.userPhone = AllSpecia.phone;
+                                   obj.userRemarks = AllSpecia.remarks;
+                                   obj.OrgCode = _this.pgxx_orgs
+                                   _this.SpecialistTable.push(obj)
+                               }
+                           });
+
                        }
                     }
                 }
                 _this.outerVisible = false
             },
+            deleteSelectionTableRowFiled(index, rows){
+                var _this = this
+                var row = rows[index];
+                debugger
+                _this.AjaxJson("deleteProjectPolicyDocument",{projectId:_this.project.id,policyDocumentId:row.id},function(data){
+                    if (data.data.code== "true"){
+                        rows.splice(index, 1);
+                    }
+                });
+
+            },
             deleteSelectionTableRow(index, rows){
-                    rows.splice(index, 1);
+                var _this = this
+                var row = rows[index];
+                _this.AjaxJson("deleteProjectOrgUser",{ProjectOrgUserId:row.ProjectOrgUserId},function(data){
+                    if (data.data.code== "true"){
+                        rows.splice(index, 1);
+                    }
+                });
             },
             SaveProjectData(){
-                var p = this.project;
-                debugger
-                var loginParams = {project:this.project,filds:this.filds,SpecialistTable:this.SpecialistTable};
+                var loginParams = {"project":this.project}
+                debugger;
                 this.$ajax({
                     method: 'post',
-                    url: '/api/SaveProjectData',
+                    url: '/api/upDataProjectData',
                     data: loginParams
                 }).then(data => {
                     if (data.data.code== "true"){
                         this.$router.push('/xmgl');
+                    }
+                });
+            },
+            init(){
+                debugger
+                var _this = this;
+                var loginParams = { projectId: this.id};
+                this.$ajax({
+                    method: 'post',
+                    url: '/api/selectProjectEdit',
+                    data: qs.stringify(loginParams)
+                }).then(data => {
+                    if (data.data.code== "true"){
+                        //_this.project.orgs = data.data.data.Orgs;
+                        _this.filds = data.data.data.PolicyDocumentList;
+                        _this.SpecialistTable = data.data.data.SpecialistList;
+                        data.data.data.project.orgs = data.data.data.Orgs;
+                        _this.project = data.data.data.project;
+
+                    } else {
+                        this.$message({
+                            message: data.data.message,
+                            type: 'error'
+                        });
                     }
                 });
             },
@@ -276,6 +328,7 @@
             }
         },
         mounted() {
+            this.init();
             var _this = this;
             //加载 org
             this.getAllOrgs(function(data){

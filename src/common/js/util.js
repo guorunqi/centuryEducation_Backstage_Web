@@ -54,8 +54,7 @@ export default {
                 return _date;
             }
             return null;
-        }
-
+    },
     }
 
 };

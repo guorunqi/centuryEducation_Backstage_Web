@@ -255,6 +255,7 @@
 						width: 200px;
 						float: left;
 						color: #475669;
+						margin-bottom:15px;
 					}
 					.breadcrumb-inner {
 						float: right;

@@ -56,9 +56,9 @@
                   url: '/api/login',
                   data: qs.stringify(loginParams)
                }).then(data => {
-                if (data.data.code== "true") {
+                if (data.data.code== "true"){
                     sessionStorage.setItem('user', JSON.stringify(data.data.data));
-                    _this.$router.push({ path: '/table' });
+                    _this.$router.push({ path: '/xmgl' });
                 } else {
                     this.$message({
                       message: data.data.message,

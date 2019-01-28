@@ -1,32 +1,29 @@
 <template>
     <div>
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form :inline="true" :model="project" class="demo-form-inline">
             <el-form-item label="项目名称">
-                <el-input v-model="formInline.user" placeholder="项目名称"></el-input>
+                <el-input v-model="project.name"  placeholder="项目名称"></el-input>
             </el-form-item>
             <el-form-item label="一级分类">
-                <el-select v-model="formInline.region" placeholder="一级分类">
-                    <el-option label="学前教育" value="jichujiaoyu"></el-option>
-                    <el-option label="基础教育" value="xueqianjiaoyu"></el-option>
-                    <el-option label="职业教育" value="zhiyejiaoyu"></el-option>
-                    <el-option label="特殊教育" value="teshujiaoyu"></el-option>
+                <el-select v-model="project.classOne" placeholder="一级分类">
+                    <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="状态" style="text-indent : 0px;">
-                <el-select v-model="formInline.region" placeholder="状态">
+                <el-select v-model="project.status" placeholder="状态">
                     <el-option label="未发布" value="weifabu"></el-option>
                     <el-option label="进行中" value="jinxingzhong"></el-option>
                     <el-option label="已结束" value="yijieshu"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="机构名称">
-                <el-input v-model="formInline.user" placeholder="机构名称"></el-input>
+                <el-select v-model="project.orgs"  placeholder="请选择">
+                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="二级分类">
-                <el-select v-model="formInline.region" placeholder="二级分类">
-                    <el-option label="教学质量" value="jiaoxuezhiliang"></el-option>
-                    <el-option label="办学水平" value="banxueshuiping"></el-option>
-                    <el-option label="综合发展" value="zonghefazhan"></el-option>
+                <el-select v-model="project.classTwo" placeholder="二级分类">
+                    <el-option v-for="item in classTwos" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item style="margin-left: 55px">
@@ -36,43 +33,19 @@
         </el-form>
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增</el-button>
-            <el-button size="" @click="">编辑</el-button>
-            <el-button size="" type="danger" @click="">删除</el-button>
         </div>
-        <el-table
-                ref="multipleTable"
-                :data="tableData3"
-                tooltip-effect="dark"
-                style="width: 100%;height: 400px"
-                @selection-change="handleSelectionChange">
-            <el-table-column
-                    type="selection"
-                    width="55">
-            </el-table-column>
-            <el-table-column
-                    prop="name"
-                    label="项目名称"
-                    width="300">
-            </el-table-column>
-            <el-table-column
-                    prop="classOne"
-                    label="一级分类"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="classTwo"
-                    label="二级分类"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop=""
-                    label="机构名称"
-                    width="300">
-            </el-table-column>
-            <el-table-column
-                    prop="stutas"
-                    label="状态"
-                    width="150">
+        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"> </el-table-column>
+            <el-table-column prop="name" label="项目名称" width="300"></el-table-column>
+            <el-table-column prop="classOne" label="一级分类" width="150"></el-table-column>
+            <el-table-column prop="classTwo" label="二级分类" width="150"></el-table-column>
+            <el-table-column prop="" label="机构名称" width="300"></el-table-column>
+            <el-table-column prop="stutas" label="状态" width="130"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="100">
+                <template slot-scope="scope">
+                    <el-button @click.native.prevent="editeProject(scope.$index, tableData)" type="text" size="small">编辑</el-button>
+                    <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, tableData)" type="text" size="small">移除</el-button>
+                </template>
             </el-table-column>
         </el-table>
        <!-- <div class="block">
@@ -92,22 +65,49 @@
 </template>
 
 <script>
+    import common from '../../common/js/common.js';
     import qs from 'qs';
     import  router from "../../routes.js"
+
     export default {
         name: "projectManagementList",
         data() {
             return {
-                formInline: {
-                    user: '',
-                    region: ''
+                project: {
+                    orgs:'',
+                    name:'',
+                    classOne:'',
+                    status:'',
+                    classTwo:''
                 },
                 fileId:0,
-                tableData3:[],
+                tableData:[],
+                classOnes:[],
+                classTwos:[],
+                Orgitems:[],
+                regions:[]
             }
         },
         mounted(){
            this.init()
+            var _this = this;
+            //加载 org
+            this.getAllOrgs(function(data){
+                _this.Orgitems = data;
+            });
+            //加载项目一级分类
+            this.getDictAllByDictTypeId('PROJECT_CLASS_ONE',function(data){
+                _this.classOnes = data;
+            });
+            //加载项目二级分类
+            this.getDictAllByDictTypeId('PROJECT_CLASS_TWO',function(data){
+                _this.classTwos = data;
+            });
+            //加载项目状态
+            this.getDictAllByDictTypeId('PROJECT_STATUS',function(data){
+                _this.status = data;
+            });
+
         },
         methods: {
             init(){
@@ -119,12 +119,34 @@
                     data: qs.stringify(loginParams)
                 }).then(data => {
                     if (data.data.code== "true"){
-                        me.tableData3 = data.data.data;
+                        me.tableData = data.data.data;
                     }
                 });
             },
+            /*onSubmit() {
+                var _this = this
+                debugger
+                this.$ajax({
+                    method: 'post',
+                    url: '/api/projectLoad',
+                    data: qs.stringify({"name":this.project.name,"classOne":this.project.classOne,"status":this.project.status,"orgs":this.project.orgs,"classTwo":this.project.classTwo})
+                }).then(data => {
+                    if (data.data.code== "true"){
+                        _this.tableData.splice(0,_this.tableData.length)
+                        _this.tableData = data.data.data;
+                    }
+                })
+            },*/
             onSubmit() {
-                console.log('submit!');
+                var _this = this
+                this.AjaxJson("projectLoad",
+                    {"name":this.project.name,"classOne":this.project.classOne,"status":this.project.status,"orgs":this.project.orgs,"classTwo":this.project.classTwo},
+                    function(data){
+                        if (data.data.code== "true"){
+                            _this.tableData.splice(0,_this.tableData.length)
+                            _this.tableData = data.data.data;
+                        }
+                    });
             },
             onReset() {
                 console.log('reset!');
@@ -138,6 +160,35 @@
                         id : this.fileId
                 }
                 })
+            },
+            deleteSelectionTableRow(index, rows){
+                var _this = this
+                var row = rows[index];
+                var loginParams = {projectId:row.id};
+                this.$ajax({
+                    method: 'post',
+                    url: '/api/deleteProject',
+                    data: qs.stringify(loginParams)
+                }).then(data => {
+                    if (data.data.code== "true"){
+                        _this.messageOk("删除项目成功")
+                        _this.tableData = []
+                        _this.init()
+                    }else{
+                        _this.messageError("删除项目失败")
+                    }
+                });
+            },
+            editeProject(index, rows){
+                var row = rows[index];
+                var projectId = row.id;
+                // this.$router.push('/xmgl');
+                this.$router.push({ name: '项目编辑',
+                    params: {
+                        id : row.id,
+                    }
+                })
+
             }
         },
 

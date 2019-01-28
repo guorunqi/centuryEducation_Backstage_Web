@@ -12,6 +12,7 @@ import echarts from './views/charts/echarts.vue'
 import zzgl from './views/zzgl.vue'
 import xmgl from './views/projectManagement/projectManagementList.vue'
 import xmxq from './views/projectManagement/projectManagementListDetail.vue'
+import xmxqbj from './views/projectManagement/projectManagementListDetailEdit.vue'
 let routes = [
     {
         path: '/login',
@@ -40,6 +41,13 @@ let routes = [
                 path: '/xmxq/:id',
                 component: xmxq,
                 name: '项目详情',
+                hidden: true
+            },
+            {
+                //项目管理 详情页面编辑
+                path: '/xmxqbj/:id',
+                component: xmxqbj,
+                name: '项目编辑',
                 hidden: true
             },
         ]
@@ -100,7 +108,6 @@ let routes = [
         name: '导航一',
         iconCls: 'el-icon-message',//图标样式class
         children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
             { path: '/table', component: Table, name: 'Table' },
             { path: '/form', component: Form, name: 'Form' },
             { path: '/user', component: user, name: '列表' },
