@@ -28,6 +28,7 @@ Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(common)
+Vue.use(qs)
 
 //NProgress.configure({ showSpinner: false });
 

@@ -13,6 +13,8 @@ import zzgl from './views/zzgl.vue'
 import xmgl from './views/projectManagement/projectManagementList.vue'
 import xmxq from './views/projectManagement/projectManagementListDetail.vue'
 import xmxqbj from './views/projectManagement/projectManagementListDetailEdit.vue'
+import zcwjgl from './views/PolicyDocumentManagement/policyDocumentManagementList.vue'
+import zcwjxq from './views/PolicyDocumentManagement/policydocumentManagementListDetail.vue'
 let routes = [
     {
         path: '/login',
@@ -69,7 +71,8 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/zcwxgl', component: Page6, name: '政策文献管理' }
+            { path: '/zcwxgl', component: zcwjgl, name: '政策文件管理' },
+            { path: '/zcwjxq/:id', component: zcwjxq, name: '政策文件详情' }
         ]
     },
     {

@@ -67,35 +67,35 @@ export default {
                     Function(data.data.data);
                 }
             });
-            Vue.prototype.messageOk = function(message){
-                this.$message({
-                    message: message,
-                    type: 'success'
-                });
-            };
-            Vue.prototype.messageError = function(message){
-                this.$message.error('错了哦，这是一条错误消息');
-            };
-            Vue.prototype.AjaxJson = function(url,loginParams,trueFunction){
-                this.$ajax({
-                    method: 'post',
-                    url: '/api/'+url,
-                    data: qs.stringify(loginParams)
-                }).then(data => {
-                    trueFunction(data);
-                })
-            };
-            Vue.prototype.Ajax = function(url,loginParams,trueFunction){
-                this.$ajax({
-                    method: 'post',
-                    url: '/api/'+url,
-                    data: loginParams
-                }).then(data => {
-                    if (data.data.code== "true"){
-                        trueFunction(data.data.data);
-                    }
-                })
-            }
         }
+        Vue.prototype.messageOk = function(message){
+            this.$message({
+                message: message,
+                type: 'success'
+            });
+        };
+        Vue.prototype.messageError = function(message){
+            this.$message.error('错了哦，这是一条错误消息');
+        };
+        Vue.prototype.AjaxJson = function(url,loginParams,trueFunction){
+            this.$ajax({
+                method: 'post',
+                url: '/api/'+url,
+                data: qs.stringify(loginParams)
+            }).then(data => {
+                trueFunction(data);
+            })
+        };
+        Vue.prototype.Ajax = function(url,loginParams,trueFunction){
+            this.$ajax({
+                method: 'post',
+                url: '/api/'+url,
+                data: loginParams
+            }).then(data => {
+                if (data.data.code== "true"){
+                    trueFunction(data.data.data);
+                }
+            })
+        };
     }
 }
