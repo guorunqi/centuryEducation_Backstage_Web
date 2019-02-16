@@ -15,6 +15,16 @@ import routes from './routes'
 //Mock.bootstrap();              -----------mock
 import axios from 'axios';
 axios.defaults.withCredentials = true;
+axios.interceptors.response.use(data => {// 响应成功关闭loading
+  debugger;
+  if(data.data=="{error:'session过期'}"){
+    router.push({ path: '/login' });
+  }else{
+    return data
+  }
+
+});
+
 Vue.prototype.$ajax = axios;
 import qs from 'qs';
 

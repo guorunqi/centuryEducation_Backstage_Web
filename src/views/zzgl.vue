@@ -66,39 +66,40 @@
 
 
         <!--新增机构界面-->
-        <el-dialog title="机构信息" v-model="addFormVisible" :close-on-click-modal="false" @close='closeDialog'>
-            <el-form :model="org" label-width="80px" ref="addForm">
-                <el-row>
+        <el-dialog title="机构信息" v-model="addFormVisible" :close-on-click-modal="false" @close='closeDialog' class="orgFrom">
+            <el-form :model="org" label-width="90px" ref="addForm" size="mini">
 
                     <el-col :span="24">
-                        <el-form-item label="名称" prop="name">
-                            <el-input v-model="org.name" auto-complete="off"></el-input>
+                        <el-form-item label="名称" prop="name" size="medium">
+                            <el-input v-model="org.name" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
 
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="编码" prop="code">
-                            <el-input v-model="org.code" auto-complete="off"></el-input>
+                            <el-input v-model="org.code" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="机构类型" prop="orgTypeId">
-                            <el-input v-model="org.orgTypeId" auto-complete="off"></el-input>
+                            <el-select v-model="org.orgTypeId">
+                                <el-option v-for="option in options" :value="option.id" :label="option.typecode"></el-option>
+                            </el-select>
                         </el-form-item>
+
                     </el-col>
                 </el-row>
 
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="邮编" prop="zipcode">
-                            <el-input v-model="org.zipcode" auto-complete="off"></el-input>
+                            <el-input v-model="org.zipcode" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="电子邮箱" prop="emali">
-                            <el-input v-model="org.emali" auto-complete="off"></el-input>
+                            <el-input v-model="org.emali" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -106,12 +107,12 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="机构负责人" prop="charge">
-                            <el-input v-model="org.charge" auto-complete="off"></el-input>
+                            <el-input v-model="org.charge" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="联系方式" prop="chargePhone">
-                            <el-input v-model="org.chargePhone" auto-complete="off"></el-input>
+                            <el-input v-model="org.chargePhone" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -119,12 +120,12 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="机构联系人" prop="contacts">
-                            <el-input v-model="org.contacts" auto-complete="off"></el-input>
+                            <el-input v-model="org.contacts" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="联系方式" prop="contactsPhone">
-                            <el-input v-model="org.contactsPhone" auto-complete="off"></el-input>
+                            <el-input v-model="org.contactsPhone" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -132,7 +133,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="网站地址" prop="website">
-                            <el-input v-model="org.website" auto-complete="off"></el-input>
+                            <el-input v-model="org.website" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -140,7 +141,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="地址" prop="address">
-                            <el-input v-model="org.address" auto-complete="off"></el-input>
+                            <el-input v-model="org.address" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -148,7 +149,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="备注" prop="remarks">
-                            <el-input type="textarea" v-model="org.remarks" auto-complete="off"></el-input>
+                            <el-input type="textarea" v-model="org.remarks" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -175,7 +176,9 @@
                     <el-input v-model="addUserForm.password" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="角色" prop="roleId">
-                    <el-input v-model="addUserForm.roleId" auto-complete="off"></el-input>
+                    <el-select v-model="addUserForm.roleId">
+                        <el-option v-for="role in roles" :value="role.id" :label="role.name"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="性别">
                     <el-radio-group v-model="addUserForm.sex">
@@ -200,6 +203,7 @@
 
 <style>
     .el-scrollbar .el-scrollbar__wrap {overflow-x: hidden;}
+    .orgFrom .el-input{width: 80%;}
 </style>
 
 <script>
@@ -233,7 +237,8 @@
                 addUserFormVisible:false,
                 addUserForm:{},
                 selectUsers:[],
-                addUserLoading:false
+                addUserLoading:false,
+                options:[]
             }
         },
         methods:{
@@ -437,12 +442,25 @@
                         this.$message.error('增加数据失败！请联系管理员。');
                     }
                 });
+            },
+            queryAllOrgType(){
+                this.$ajax({method: 'post',
+                    url:'/api/queryAllOrgType',
+                    data:{}
+                }).then(data =>{
+                    if(data.data.code=="true"){
+                        this.options=data.data.data;
+                    }else {
+                        this.$message.error('加载数据失败！请联系管理员。');
+                    }
+                });
             }
 
         },
         mounted() {
             this.queryOrgTreeData();
             this.queryRolesData();
+            this.queryAllOrgType();
         }
     }
 
