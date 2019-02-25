@@ -10,6 +10,12 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import zzgl from './views/zzgl.vue'
+import xxzpgl from './views/xxzp/xxzpgl.vue'
+import xxzpglxq from './views/xxzp/xxzpglxq.vue'
+import xxzpxqbj from './views/xxzp/xxzpxqbj.vue'
+import pggl from './views/pggl/pggl.vue'
+import pgjg from './views/pggl/pgjg.vue'
+import pgxq from './views/pggl/pgxq.vue'
 import xmgl from './views/projectManagement/projectManagementList.vue'
 import xmxq from './views/projectManagement/projectManagementListDetail.vue'
 import xmxqbj from './views/projectManagement/projectManagementListDetailEdit.vue'
@@ -30,30 +36,7 @@ let routes = [
     },
     //{ path: '/main', component: Main },
 
-    {
-        path: '/',
-        component: Home,
-        name: '项目管理',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/xmgl', component: xmgl, name: '项目管理' },
-            {
-                //项目管理 详情页面
-                path: '/xmxq/:id',
-                component: xmxq,
-                name: '项目详情',
-                hidden: true
-            },
-            {
-                //项目管理 详情页面编辑
-                path: '/xmxqbj/:id',
-                component: xmxqbj,
-                name: '项目编辑',
-                hidden: true
-            },
-        ]
-    },
+
     {
         path: '/',
         component: Home,
@@ -82,7 +65,45 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/xxzpgl', component: Page6, name: '学校自评管理' }
+            { path: '/pggl', component: pggl, name: '评估管理' },
+            { path: '/pgjg/:id', component: pgjg, name: '评估结果' },
+            { path: '/pgxq/:id', component: pgxq, name: '评估详情' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/xxzpgl', component: xxzpgl, name: '学校自评管理' },
+            { path: '/xxzpglxq/:id', component: xxzpglxq, name: '学校自评详情'},
+            { path: '/xxzpxqbj/:id', component: xxzpxqbj, name: '自评信息编辑'}
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '项目管理',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/xmgl', component: xmgl, name: '项目管理' },
+            {
+                //项目管理 详情页面
+                path: '/xmxq/:id',
+                component: xmxq,
+                name: '项目详情',
+                hidden: true
+            },
+            {
+                //项目管理 详情页面编辑
+                path: '/xmxqbj/:id',
+                component: xmxqbj,
+                name: '项目编辑',
+                hidden: true
+            },
         ]
     },
     {

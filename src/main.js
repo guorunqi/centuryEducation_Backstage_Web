@@ -14,9 +14,12 @@ import routes from './routes'
 //import Mock from './mock'      -----------mock
 //Mock.bootstrap();              -----------mock
 import axios from 'axios';
+
+import  VueQuillEditor from 'vue-quill-editor';
+Vue.use(VueQuillEditor);
+
 axios.defaults.withCredentials = true;
 axios.interceptors.response.use(data => {// 响应成功关闭loading
-  debugger;
   if(data.data=="{error:'session过期'}"){
     router.push({ path: '/login' });
   }else{
