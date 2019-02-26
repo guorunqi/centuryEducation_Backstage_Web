@@ -34,7 +34,7 @@
             </el-form-item>
             <el-form-item style="margin-left: 55px">
                 <el-button type="primary" @click="init">查询</el-button>
-                <el-button type="primary" @click="onReset">重置</el-button>
+                <el-button type="primary" @click="">重置</el-button>
             </el-form-item>
         </el-form>
         <div style="margin-bottom: 15px">
@@ -103,8 +103,23 @@
             this.init()
         },
         methods: {
-            exportSelectionTableRow(){
+            exportSelectionTableRow(index, rows){
+                var _this = this
+                var row = rows[index];
+                _this.AjaxJson("downPolicydocumentManagementWord",{"PolicyDocumentId":row.id},
+                    function(data){
+                        if (data.data.code== "true"){
+                            var filePathName = data.data.data
+                            debugger
+                            window.location.href = "/api/download?Name="+filePathName;
+                            /*_this.getAjax("downloadaad" ,function(data){
+                                debugger
+                                _this.messageOk("导出成功")
+                            })*/
+                          /*  window.location.href = filePathName;*/
 
+                        }
+                    });
             },
             init() {
                 var _this = this
@@ -112,6 +127,7 @@
                     {"policyName":this.policyDocument.policyName,"classOne":this.policyDocument.classOne,"classTwo":this.policyDocument.classTwo},
                     function(data){
                         if (data.data.code== "true"){
+                            debugger
                             _this.tableData.splice(0,_this.tableData.length)
                             _this.tableData = data.data.data;
                         }
@@ -123,12 +139,19 @@
             deleteSelectionTableRow(index, rows){
                 var _this = this
                 var row = rows[index];
-                var loginParams = {projectId:row.id};
-
+                this.AjaxJson("DeleteSubordinatePolicyDocument",{"id":row.id},
+                    function(data){
+                        if (data.data.code== "true"){
+                            _this.tableData.splice(0,_this.tableData.length)
+                            _this.init()
+                            _this.messageOk("删除成功")
+                        }
+                    });
             },
             editeProject(index, rows){
                 var row = rows[index];
                 var projectId = row.id;
+                this.$router.push({ name: '政策文件详情',params: {"id":row.id}})
                 /*this.$router.push({ name: '项目编辑',
                     params: {
                         id : row.id,

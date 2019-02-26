@@ -243,7 +243,6 @@
             },
             SaveProjectData(){
                 var p = this.project;
-                debugger
                 var loginParams = {project:this.project,filds:this.filds,SpecialistTable:this.SpecialistTable};
                 this.$ajax({
                     method: 'post',

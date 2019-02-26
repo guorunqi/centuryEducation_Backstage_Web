@@ -112,7 +112,6 @@
             },
             // 展开下级
             toggle: function (trIndex) {
-                debugger
                 let me = this
                 let record = me.data[trIndex]
                 record._expanded = !record._expanded
