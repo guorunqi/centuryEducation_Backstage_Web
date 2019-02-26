@@ -92,7 +92,7 @@
                 },
                 TreeEditSubordinatePolicyDocumentData:{},
                 policyDocument: {
-                    id:'522ddc984a9c433c',
+                    id:'',
                     remarks:'',
                     policyName:'',
                     classOne: '',//
@@ -130,20 +130,13 @@
                         this.AjaxJson("DeleteSubordinatePolicyDocumentEntry",{"id":data.id},
                             function(data){
                                 if (data.data.code== "true"){
-
                                     _this.dataSource.splice(0,_this.dataSource.length)
                                     _this.load()
-                                    this.$message({
-                                        type: 'success',
-                                        message: '删除成功!'
-                                    })
+                                    _this.messageOk("删除成功")
                                 }
                             });
                     }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        })
+                        _this.messageOk("已取消删除")
                     })
 
             },
@@ -196,7 +189,9 @@
                 this.AjaxJson("selectPolicyDocumentEntryByPolicyDocumentId",{"PolicyDocumentId":this.policyDocument.id},
                     function(data){
                         if (data.data.code== "true"){
-                           _this.dataSource = data.data.data
+                            console.log(data.data.data.policyDocument)
+                            _this.policyDocument = data.data.data.policyDocument
+                           _this.dataSource = data.data.data.treeTableData
                         }
                     });
             },
@@ -219,6 +214,7 @@
             }
         },
         mounted() {
+            this.policyDocument.id = this.id
             this.load()
             var _this = this;
             //加载项目一级分类

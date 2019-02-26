@@ -4,6 +4,15 @@ import Vue from 'vue'
 
 export default {
     install(Vue)  {
+        Vue.prototype.objectToArr = function(data){
+            var dataArr = [];
+            if(data.constructor === Object){
+                dataArr[0] = data;
+            }else{
+                dataArr = data
+            }
+            return dataArr;
+        };
         Vue.prototype.getDictAllByDictTypeId = function(dictTypeId,Function){
             var loginParams = {dictTypeId:dictTypeId};
             this.$ajax({
@@ -97,5 +106,13 @@ export default {
                 }
             })
         };
+        Vue.prototype.getAjax = function(url,trueFunction){
+            this.$ajax.get(/api/+url)
+                .then(function (res) {
+                    trueFunction(res)
+                }).catch(function (err) {
+
+            })
+        }
     }
 }

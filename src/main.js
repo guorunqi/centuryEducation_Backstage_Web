@@ -1,4 +1,3 @@
-import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import common from './common/js/common.js'
 import App from './App'
@@ -16,7 +15,6 @@ import routes from './routes'
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 axios.interceptors.response.use(data => {// 响应成功关闭loading
-  debugger;
   if(data.data=="{error:'session过期'}"){
     router.push({ path: '/login' });
   }else{

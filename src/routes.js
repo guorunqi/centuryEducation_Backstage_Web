@@ -15,6 +15,10 @@ import xmxq from './views/projectManagement/projectManagementListDetail.vue'
 import xmxqbj from './views/projectManagement/projectManagementListDetailEdit.vue'
 import zcwjgl from './views/PolicyDocumentManagement/policyDocumentManagementList.vue'
 import zcwjxq from './views/PolicyDocumentManagement/policydocumentManagementListDetail.vue'
+import wjgl from './views/QuestionnaireManagement/QuestionnaireManagementList.vue'
+import wjgladd from './views/QuestionnaireManagement/QuestionnaireManagementAdd.vue'
+import wjgledit from './views/QuestionnaireManagement/QuestionnaireManagementEdit.vue'
+import wjgltx from './views/QuestionnaireManagement/QuestionnaireManagementFill.vue'
 let routes = [
     {
         path: '/login',
@@ -92,7 +96,10 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/wjgl', component: Page6, name: '问卷管理' }
+            { path: '/wjgl', component: wjgl, name: '问卷管理' },
+            { path: '/wjgladd', component: wjgladd, name: '新增问卷管理' },
+            { path: '/wjgledit/:id', component: wjgledit, name: '编辑问卷' },
+            { path: '/wjgltx/:id', component: wjgltx, name: '问题填写' },
         ]
     },
     {
