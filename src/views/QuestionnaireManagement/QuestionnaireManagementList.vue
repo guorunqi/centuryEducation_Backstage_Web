@@ -98,7 +98,6 @@
                 var loginParams = {"name":this.questionnaire.name,"proName":this.questionnaire.project.proName,"crowdOriented":this.questionnaire.crowdOriented,"type":this.questionnaire.type}
                 _this.AjaxJson("QuestionnaireManagementLoad",loginParams,
                     function(data){
-                        debugger
                         if (data.data.code== "true"){
                             _this.tableData = data.data.data;
                         }
@@ -144,7 +143,6 @@
                     url: '/api/deleteQuestionnaire',
                     data: qs.stringify({"id":row.id})
                 }).then(data => {
-                    debugger
                     if (data.data.code== "true"){
                         _this.messageOk("删除项目成功")
                         _this.tableData = []

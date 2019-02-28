@@ -140,14 +140,12 @@
                 var row = rows[index];
                 if (this.Questionnaire.Org == undefined)return
                 this.outerVisibleFile = true;
-                debugger
                 this.AddQuestionnaires.answerType = row.answerType;
                 this.AddQuestionnaires.content = row.content;
                 this.AddQuestionnaires.exhibitionType = row.exhibitionType;
                 this.AddQuestionnaires.answerData = row.answerData;
             },
             SaveEditAnswer:function(){
-                debugger
                 var row = this.AddQuestionnaires.answerData[this.AnswerIndex];
                 this.answerDatas = row;
                 this.answerDatas.selectionRate = this.SelectPro;
@@ -160,7 +158,6 @@
                     }
                 }
                 this.outEditAnswer =false;
-                debugger
             },
             closeQuestionnaire:function(){
                 this.$router.push('/wjgl');
@@ -201,7 +198,6 @@
                 });
             },
             initData:function(){
-                debugger
                 var QuestionnaireId = this.id;
                 var _this = this
                 var loginParams = {"QuestionnaireId":QuestionnaireId};

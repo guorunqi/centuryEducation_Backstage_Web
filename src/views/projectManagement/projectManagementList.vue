@@ -95,7 +95,6 @@
             var _this = this;
             //加载 org
             this.getAllOrgs(function(data){
-                debugger
                 _this.Orgitems = data;
             });
             //加载项目一级分类
@@ -128,7 +127,6 @@
             },
             /*onSubmit() {
                 var _this = this
-                debugger
                 this.$ajax({
                     method: 'post',
                     url: '/api/projectLoad',

@@ -52,7 +52,7 @@
                 </div>
             </el-dialog>
         </div>
-        <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" style="width: 100%;height: 400px">
                 <el-table-column label="相关文件">
                     <el-table-column type="selection" width="55"> </el-table-column>
                     <el-table-column prop="policyName" label="文件名称" width="300"></el-table-column>
@@ -103,7 +103,7 @@
             </el-dialog>
         </div>
 
-        <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px">
             <el-table-column label="涉及专家">
                 <el-table-column type="selection"                        width="55"></el-table-column>
                 <el-table-column prop="OrgCode"        label="评估学校"  width="300"></el-table-column>
@@ -208,9 +208,6 @@
             onReset() {
                 console.log('reset!');
             },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
             addZZ(){
                 var _this = this
                 _this.outerVisible = true
@@ -243,7 +240,6 @@
                 var _this = this
                 var selectSpecialist = _this.selectSpecialist
                 var AllSpecialist = _this.AllSpecialist
-                debugger
                 for ( var i = 0; i <AllSpecialist.length; i++){
                     var AllSpecia = AllSpecialist[i];
                     for(let key  in AllSpecia){
@@ -251,7 +247,6 @@
                        if(key == "code" && value == selectSpecialist){
                            _this.AjaxJson("insertProjectOrgUser",{projectId:_this.project.id,userId:AllSpecia.id,orgCode:_this.pgxx_orgs},function(data){
                                if (data.data.code== "true"){
-                                   debugger
                                    obj.userName = AllSpecia.name;
                                    obj.SpecialistId = AllSpecia.id;
                                    obj.userPhone = AllSpecia.phone;
@@ -269,7 +264,6 @@
             deleteSelectionTableRowFiled(index, rows){
                 var _this = this
                 var row = rows[index];
-                debugger
                 _this.AjaxJson("deleteProjectPolicyDocument",{projectId:_this.project.id,policyDocumentId:row.id},function(data){
                     if (data.data.code== "true"){
                         rows.splice(index, 1);
@@ -287,8 +281,7 @@
                 });
             },
             SaveProjectData(){
-                var loginParams = {"project":this.project}
-                debugger;
+                var loginParams = {"project":this.project};
                 this.$ajax({
                     method: 'post',
                     url: '/api/upDataProjectData',
@@ -300,7 +293,6 @@
                 });
             },
             init(){
-                debugger
                 var _this = this;
                 var loginParams = { projectId: this.id};
                 this.$ajax({

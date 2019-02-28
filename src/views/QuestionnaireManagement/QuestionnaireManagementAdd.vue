@@ -28,7 +28,7 @@
             <!-- 新增问题 -->
             <div style="margin-bottom: 15px">
                 <el-button type="primary" icon="plus" @click="outerVisibleFile = true">新增问题</el-button>
-                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData" border tooltip-effect="dark" style="width: 100%;height: 400px">
                     <el-table-column label="问卷问题">
                         <el-table-column type="selection" width="55"> </el-table-column>
                         <el-table-column prop="content" label="问题内容" width="300"></el-table-column>
@@ -60,7 +60,7 @@
                     </el-select>
                 </el-form-item>
                 <el-button type="primary" icon="plus" @click="outerAnswer = true">新增问题答案</el-button>
-                <el-table ref="multipleTable" :data="AddQuestionnaires.answerData" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+                <el-table ref="multipleTable" :data="AddQuestionnaires.answerData" border tooltip-effect="dark" style="width: 100%;height: 400px">
                     <el-table-column prop="code" label="选项代码" width="300"></el-table-column>
                     <el-table-column prop="content" label="选项内容" width="150"></el-table-column>
                     <el-table-column prop="" label="选择率" width="150"></el-table-column>
@@ -109,7 +109,7 @@
                     </el-select>
                 </el-form-item>
                 <el-button type="primary" icon="plus" @click="outerAnswer = true">新增问题答案</el-button>
-                <el-table ref="multipleTable" :data="AddQuestionnaires1.answerData" border tooltip-effect="dark" style="width: 100%;height: 300px" @selection-change="handleSelectionChange">
+                <el-table ref="multipleTable" :data="AddQuestionnaires1.answerData" border tooltip-effect="dark" style="width: 100%;height: 300px">
                     <el-table-column prop="code" label="选项代码" width="300"></el-table-column>
                     <el-table-column prop="content" label="选项内容" width="150"></el-table-column>
                     <el-table-column prop="" label="选择率" width="150"></el-table-column>
@@ -196,7 +196,6 @@
                 this.outerAnswer = false
             },
             SaveAddQuestionnaires:function(){
-                debugger
                 var QuestionnaireData = this.Questionnaire.QuestionnaireData;
                 QuestionnaireData.push(this.AddQuestionnaires);
                 this.AddQuestionnaires={}
@@ -209,7 +208,6 @@
                 rows.splice(index, 1);
             },
             updataAddQuestionnaires:function(index, rows){
-                debugger
                 var _this = this
                 var row = rows[index];
                 this.outerVisibleFile1 = true;
@@ -233,7 +231,6 @@
                     url:'/api/SaveQuestionnaire',
                     data:{data:JSON.stringify(this.Questionnaire)}
                 }).then(data =>{
-                    debugger
                     if(data.data.code=="true"){
                         this.$message({
                             message: '增加数据成功！',
