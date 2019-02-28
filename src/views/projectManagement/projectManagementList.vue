@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <el-form :inline="true" :model="project" class="demo-form-inline">
+    <div style="width: 80%;margin: 0 auto;">
+        <el-form :inline="true" :model="project" class="demo-form-inline" >
             <el-form-item label="项目名称">
                 <el-input v-model="project.name"  placeholder="项目名称"></el-input>
             </el-form-item>
@@ -9,12 +9,9 @@
                     <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="状态" style="text-indent : 0px;">
-                <el-select v-model="project.status" placeholder="状态">
-                    <el-option label="未发布" value="weifabu"></el-option>
-                    <el-option label="进行中" value="jinxingzhong"></el-option>
-                    <el-option label="已结束" value="yijieshu"></el-option>
-                </el-select>
+            <el-form-item style="float: right">
+                <el-button type="primary" @click="onSubmit">查询</el-button>
+                <el-button type="primary" @click="onReset">重置</el-button>
             </el-form-item>
             <el-form-item label="机构名称">
                 <el-select v-model="project.orgs"  placeholder="请选择">
@@ -26,21 +23,26 @@
                     <el-option v-for="item in classTwos" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item style="margin-left: 55px">
-                <el-button type="primary" @click="onSubmit">查询</el-button>
-                <el-button type="primary" @click="onReset">重置</el-button>
+            <el-form-item label="状态">
+                <el-select v-model="project.status" placeholder="状态">
+                    <el-option label="未发布" value="weifabu"></el-option>
+                    <el-option label="进行中" value="jinxingzhong"></el-option>
+                    <el-option label="已结束" value="yijieshu"></el-option>
+                </el-select>
             </el-form-item>
+
+
         </el-form>
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增</el-button>
         </div>
-        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55"> </el-table-column>
-            <el-table-column prop="name" label="项目名称" width="300"></el-table-column>
-            <el-table-column prop="classOne" label="一级分类" width="150"></el-table-column>
-            <el-table-column prop="classTwo" label="二级分类" width="150"></el-table-column>
-            <el-table-column prop="" label="机构名称" width="300"></el-table-column>
-            <el-table-column prop="stutas" label="状态" width="130"></el-table-column>
+        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;height: 300px">
+            <el-table-column type="selection" width="40"></el-table-column>
+            <el-table-column prop="name" label="项目名称" width="250"></el-table-column>
+            <el-table-column prop="classOne" label="一级分类" width="110"></el-table-column>
+            <el-table-column prop="classTwo" label="二级分类" width="110"></el-table-column>
+            <el-table-column prop="" label="机构名称" width="220"></el-table-column>
+            <el-table-column prop="stutas" label="状态" width="80"></el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.native.prevent="editeProject(scope.$index, tableData)" type="text" size="small">编辑</el-button>
@@ -93,6 +95,7 @@
             var _this = this;
             //加载 org
             this.getAllOrgs(function(data){
+                debugger
                 _this.Orgitems = data;
             });
             //加载项目一级分类
@@ -151,9 +154,6 @@
             onReset() {
                 console.log('reset!');
             },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
             add() {
                 this.$router.push({ name: '项目详情',
                     params: {
@@ -195,8 +195,12 @@
     }
 </script>
 
-<style>
-    .el-input{
-        width: 300px;
+<style scoped>
+    .el-form-item__label{
+        width:68px;
+    }
+
+    .el-input {
+        width: 250px;
     }
 </style>

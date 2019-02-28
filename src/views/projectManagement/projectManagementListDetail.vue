@@ -1,5 +1,6 @@
+
 <template>
-    <div>
+    <div style="width: 80%;margin: 0 auto;">
         <el-form :inline="true" :model="project" class="demo-form-inline">
             <el-form-item label="项目名称">
                 <el-input v-model="project.name" value="fildId" placeholder="项目名称"></el-input>
@@ -12,26 +13,32 @@
             <el-form-item label="起始时间">
                 <el-date-picker type="date" placeholder="选择日期"  v-model="project.startTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
-            <el-button type="primary" @click="SaveProjectData">保存项目</el-button>
-            <el-form-item label="机构名称">
-                <el-select v-model="project.orgs"  multiple  placeholder="请选择">
-                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="二级分类">
                 <el-select v-model="project.classTwo" placeholder="二级分类">
                     <el-option v-for="item in classTwos" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
+
+
+            <el-form-item label="机构名称">
+                <el-select v-model="project.orgs"  multiple  placeholder="请选择">
+                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+            </el-form-item>
+
             <el-form-item label="结束时间">
                 <el-date-picker type="date" placeholder="选择日期" v-model="project.endTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
-            <el-button type="primary" @click="closeProject">关闭项目</el-button>
+
 
         </el-form>
         <!-- 相关文件 -->
         <div style="margin-bottom: 15px">
             <el-button type="primary" icon="plus" @click="outerVisibleFile = true">新增文件</el-button>
+            <div style="float: right">
+                <el-button type="primary" @click="SaveProjectData">保存项目</el-button>
+                <el-button type="primary" @click="closeProject">关闭项目</el-button>
+            </div>
             <!-- 添加文件页面 -->
             <el-dialog title="添加文件" :visible.sync="outerVisibleFile">
                 <el-form ref="form" :model="form" label-width="auto">
@@ -55,10 +62,10 @@
         <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
                 <el-table-column label="相关文件">
                     <el-table-column type="selection" width="55"> </el-table-column>
-                    <el-table-column prop="policyName" label="文件名称" width="300"></el-table-column>
-                    <el-table-column prop="classOne" label="一级分类" width="150"></el-table-column>
-                    <el-table-column prop="classTwo" label="二级分类" width="150"></el-table-column>
-                    <el-table-column fixed="right"              label="操作"      width="80">
+                    <el-table-column prop="policyName" label="文件名称" width="400"></el-table-column>
+                    <el-table-column prop="classOne" label="一级分类" width="200"></el-table-column>
+                    <el-table-column prop="classTwo" label="二级分类" width="200"></el-table-column>
+                    <el-table-column fixed="right"              label="操作"      width="143">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, filds)" type="text" size="small">移除</el-button>
                         </template>
@@ -106,11 +113,11 @@
         <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
             <el-table-column label="涉及专家">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="SpecialistSchool"    label="评估学校"  width="300"></el-table-column>
+                <el-table-column prop="SpecialistSchool"    label="评估学校"  width="393"></el-table-column>
                 <el-table-column prop="SpecialistName"      label="姓名"      width="150" ></el-table-column>
                 <el-table-column prop="SpecialistPhone"     label="电话"      width="150"></el-table-column>
                 <el-table-column prop="SpecialistRemarks"   label="备注"      width="150"></el-table-column>
-                <el-table-column fixed="right"              label="操作"      width="80">
+                <el-table-column fixed="right"              label="操作"      width="100">
                     <template slot-scope="scope">
                         <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, SpecialistTable)" type="text" size="small">移除</el-button>
                     </template>
@@ -284,9 +291,11 @@
 
 
 </script>
-
-<style>
-    .el-input{
-        width: 300px;
+<style scoped>
+    .el-form-item__label{
+        width:68px;
+    }
+    .el-input {
+        width: 250px;
     }
 </style>
