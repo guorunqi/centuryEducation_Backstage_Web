@@ -198,7 +198,7 @@
             SaveAddQuestionnaires:function(){
                 var QuestionnaireData = this.Questionnaire.QuestionnaireData;
                 QuestionnaireData.push(this.AddQuestionnaires);
-                this.AddQuestionnaires={}
+
                 this.outerVisibleFile = false
             },
             deleteAddQuestionnaires:function(index, rows){
