@@ -179,8 +179,8 @@
             if(this.id!=null&&this.id!=0){
                 this.$ajax({
                     method: 'post',
-                    url: '/api/queryAllSelfEvaluationEntry',
-                    data: {}
+                    url: '/api/querySelfEvaluationEntryBySelfEvaluationID',
+                    data: {id:this.selfEvaluation.id}
                 }).then(data => {
                     if (data.data.code== "true"){
                         this.selfEvaluationEntrys=data.data.data;
@@ -201,7 +201,8 @@
                     type: 'warning'
                 });
             }else{
-                this.selfEvaluation.id=selfEvaluation.id;
+                this.selfEvaluationEntry={};
+                this.selfEvaluationEntry.selfEvaluationId=selfEvaluation.id;
                 this.outerVisibleFile = true;
             }
         },
@@ -221,6 +222,7 @@
             }).then(data => {
                 if (data.data.code== "true"){
                     this.selfEvaluation=data.data.data;
+                    this.queryselfEvaluationEntrys();
                 }
             });
         },
@@ -273,7 +275,6 @@
         //加载 项目
         this.queryProject();
         if(this.id!=null&&this.id!=0){
-            this.queryselfEvaluationEntrys();
             this.queryselfEvaluation();
         }
         this.selectAllSpecialist(function(data){

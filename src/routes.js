@@ -126,16 +126,6 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/pggl', component: Page6, name: '评估管理' }
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
         name: '导航一',
         iconCls: 'el-icon-message',//图标样式class
         children: [

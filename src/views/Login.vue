@@ -64,6 +64,7 @@
                       message: data.data.message,
                       type: 'error'
                     });
+                    this.logining=false;
                 }
                });
             return true;

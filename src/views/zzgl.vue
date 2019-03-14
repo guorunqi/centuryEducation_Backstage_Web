@@ -68,12 +68,13 @@
         <!--新增机构界面-->
         <el-dialog title="机构信息" v-model="addFormVisible" :close-on-click-modal="false" @close='closeDialog' class="orgFrom">
             <el-form :model="org" label-width="90px" ref="addForm" size="mini">
-
+                <el-row>
                     <el-col :span="24">
                         <el-form-item label="名称" prop="name" size="medium">
                             <el-input v-model="org.name" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
 
                 <el-row>
                     <el-col :span="12">
@@ -373,6 +374,9 @@
                 });
             },
             showAddUserFrom(){
+
+                this.addUserForm={};
+
                 var checkNodes=this.clickNode;
                 if(checkNodes.id==null){
                     this.$message({
@@ -385,6 +389,7 @@
                 }
             },
             showEditUserFrom(){
+                this.addUserForm={};
                 if(this.selectUsers.length!=1){
                     this.$message({
                         showClose: true,
@@ -431,7 +436,7 @@
                     data:{data:JSON.stringify(this.addUserForm),orgid:this.clickNode.id}
                 }).then(data =>{
                     if(data.data.code=="true"){
-                        this.addFormVisible=false;
+                        this.addUserFormVisible=false;
                         this.$message({
                             message: '增加数据成功！',
                             type: 'success'

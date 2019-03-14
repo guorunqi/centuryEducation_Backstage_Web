@@ -98,14 +98,6 @@
         }
     },
     methods: {
-        onSubmit() {
-            console.log('submit!');
-        },
-        onReset() {
-            console.log('reset!');
-        },
-        addZZ(){
-        },
         AddSelfEvaluationEntry(){
             var selfEvaluationEntry=this.selfEvaluationEntry;
             this.$ajax({
@@ -190,8 +182,8 @@
             if(this.id!=null&&this.id!=0){
                 this.$ajax({
                     method: 'post',
-                    url: '/api/queryAllSelfEvaluationEntry',
-                    data: {}
+                    url: '/api/querySelfEvaluationEntryBySelfEvaluationID',
+                    data: {id:this.selfEvaluation.id}
                 }).then(data => {
                     if (data.data.code== "true"){
                         this.selfEvaluationEntrys=data.data.data;
