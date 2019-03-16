@@ -43,8 +43,8 @@
         <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;height: 400px">
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column prop="policyName" label="文件名称" width="310"></el-table-column>
-            <el-table-column prop="classOne" label="一级分类" width="150"></el-table-column>
-            <el-table-column prop="classTwo" label="二级分类" width="150"></el-table-column>
+            <el-table-column prop="classOne" label="一级分类" width="150" :formatter="formatPolicyDocumentClassOnes"></el-table-column>
+            <el-table-column prop="classTwo" label="二级分类" width="150" :formatter="formatPolicyDocumentClassTwos"></el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="150"></el-table-column>
             <el-table-column prop="updateTime" label="最后修改时间" width="150"></el-table-column>
             <el-table-column fixed="right" label="操作" width="140">
@@ -97,7 +97,7 @@
                 _this.policyDocumentClassOnes = data;
             });
             //加载项目二级分类
-            this.getDictAllByDictTypeId('PROJECT_CLASS_TWO',function(data){
+            this.getDictAllByDictTypeId('POLICY_DOCUMENT_TWO',function(data){
                 _this.policyDocumentClassTwos = data;
             });
             this.init()
@@ -145,6 +145,8 @@
                             _this.tableData.splice(0,_this.tableData.length)
                             _this.init()
                             _this.messageOk("删除成功")
+                        }else{
+                            _this.messageOk("政策文件已使用")
                         }
                     });
             },
@@ -152,14 +154,21 @@
                 var row = rows[index];
                 var projectId = row.id;
                 this.$router.push({ name: '政策文件详情',params: {"id":row.id}})
-                /*this.$router.push({ name: '项目编辑',
-                    params: {
-                        id : row.id,
-                    }
-                })*/
-
-            }
+            },
+            formatPolicyDocumentClassOnes(row,column){
+                var returnData='';
+                if(this.policyDocumentClassOnes.length>0){
+                    return this.formatData(this.policyDocumentClassOnes,row,"classOne");
+                }
+            },
+            formatPolicyDocumentClassTwos(row,column){
+                var returnData='';
+                if(this.policyDocumentClassTwos.length>0){
+                    return this.formatData(this.policyDocumentClassTwos,row,"classTwo");
+                }
+            },
         },
+
 
     }
 </script>

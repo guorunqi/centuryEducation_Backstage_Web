@@ -113,6 +113,13 @@ export default {
                 }).catch(function (err) {
 
             })
-        }
+        };
+        Vue.prototype.formatData=function(data,row,type){
+            for(var i=0;i<data.length;i++){
+                if(data[i].dictId==row[type]){
+                    return data[i].dictName;
+                }
+            }
+        };
     }
 }

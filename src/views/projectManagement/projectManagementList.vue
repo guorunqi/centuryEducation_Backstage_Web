@@ -4,18 +4,18 @@
             <el-form-item label="项目名称">
                 <el-input v-model="project.name"  placeholder="项目名称"></el-input>
             </el-form-item>
-            <el-form-item label="一级分类">
-                <el-select v-model="project.classOne" placeholder="一级分类">
-                    <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
+            <el-form-item label="机构名称">
+                <el-select v-model="project.orgs"  placeholder="请选择">
+                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item style="float: right">
                 <el-button type="primary" @click="onSubmit">查询</el-button>
                 <el-button type="primary" @click="onReset">重置</el-button>
             </el-form-item>
-            <el-form-item label="机构名称">
-                <el-select v-model="project.orgs"  placeholder="请选择">
-                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
+            <el-form-item label="一级分类">
+                <el-select v-model="project.classOne" placeholder="一级分类">
+                    <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="二级分类">
@@ -37,12 +37,12 @@
             <el-button size="" @click="add">新增</el-button>
         </div>
         <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;height: 300px">
-            <el-table-column type="selection" width="40"></el-table-column>
+            <el-table-column type="selection" width="34"></el-table-column>
             <el-table-column prop="name" label="项目名称" width="250"></el-table-column>
-            <el-table-column prop="classOne" label="一级分类" width="110"></el-table-column>
-            <el-table-column prop="classTwo" label="二级分类" width="110"></el-table-column>
+            <el-table-column prop="classOne" label="一级分类" width="110" :formatter="formatClassOnes"></el-table-column>
+            <el-table-column prop="classTwo" label="二级分类" width="110" :formatter="formatClassTwos"></el-table-column>
             <el-table-column prop="" label="机构名称" width="220"></el-table-column>
-            <el-table-column prop="stutas" label="状态" width="80"></el-table-column>
+            <el-table-column prop="stutas" label="状态" width="80" :formatter="formatStatus"></el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.native.prevent="editeProject(scope.$index, tableData)" type="text" size="small">编辑</el-button>
@@ -173,7 +173,7 @@
                         _this.tableData = []
                         _this.init()
                     }else{
-                        _this.messageError("删除项目失败")
+                        _this.messageError(data.data.message)
                     }
                 });
             },
@@ -187,18 +187,33 @@
                     }
                 })
 
-            }
+            },
+            formatClassOnes(row,column){
+                var returnData='';
+                if(this.classOnes.length>0){
+                    return this.formatData(this.classOnes,row,"classOne");
+                }
+            },
+            formatClassTwos(row,column){
+                var returnData='';
+                if(this.classTwos.length>0){
+                    return this.formatData(this.classTwos,row,"classTwo");
+                }
+            },
+            formatStatus(row,column){
+                var returnData='';
+                if(this.status.length>0){
+                    return this.formatData(this.status,row,"stutas");
+                }
+            },
+
         },
 
     }
 </script>
 
-<style scoped>
-    .el-form-item__label{
-        width:68px;
-    }
-
-    .el-input {
-        width: 250px;
+<style>
+    .el-input__inner{
+        width:300px;
     }
 </style>

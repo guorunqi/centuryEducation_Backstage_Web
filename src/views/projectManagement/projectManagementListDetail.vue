@@ -5,6 +5,11 @@
             <el-form-item label="项目名称">
                 <el-input v-model="project.name" value="fildId" placeholder="项目名称"></el-input>
             </el-form-item>
+            <el-form-item label="机构名称">
+                <el-select v-model="project.orgs"  multiple  placeholder="请选择">
+                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="一级分类">
                 <el-select v-model="project.classOne" placeholder="一级分类">
                     <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
@@ -20,11 +25,7 @@
             </el-form-item>
 
 
-            <el-form-item label="机构名称">
-                <el-select v-model="project.orgs"  multiple  placeholder="请选择">
-                    <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
-                </el-select>
-            </el-form-item>
+
 
             <el-form-item label="结束时间">
                 <el-date-picker type="date" placeholder="选择日期" v-model="project.endTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
@@ -283,19 +284,9 @@
                 _this.AllSpecialist = data;
             });
             this.selectAllPolicyDocument(function(data){
+                debugger
                 _this.AllPolicyDocumentData = data;
             });
         },
     }
-
-
-
 </script>
-<style scoped>
-    .el-form-item__label{
-        width:68px;
-    }
-    .el-input {
-        width: 250px;
-    }
-</style>

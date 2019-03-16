@@ -1,9 +1,10 @@
 <template>
-    <div>
+    <div  style="width: 80%;margin: 0 auto;">
         <el-form :inline="true" :model="policyDocument" class="demo-form-inline">
             <el-form-item label="文件名称">
                 <el-input v-model="policyDocument.policyName" placeholder="政策文件名称"></el-input>
             </el-form-item>
+
             <el-form-item label="一级分类">
                 <el-select v-model="policyDocument.classOne" placeholder="一级分类">
                     <el-option v-for="item in policyClassOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
@@ -236,6 +237,9 @@
 </script>
 
 <style>
+    .el-form-item__label{
+        width:68px;
+    }
     .el-input{
         width: 300px;
     }

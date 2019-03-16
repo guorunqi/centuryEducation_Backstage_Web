@@ -32,8 +32,8 @@
                     <el-table-column label="问卷问题">
                         <el-table-column type="selection" width="55"> </el-table-column>
                         <el-table-column prop="content" label="问题内容" width="300"></el-table-column>
-                        <el-table-column prop="answerType" label="答案类型" width="150"></el-table-column>
-                        <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="150"></el-table-column>
+                        <el-table-column prop="answerType" label="答案类型" width="150" :formatter="formatAnswerType"></el-table-column>
+                        <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="150" :formatter="formatExhibitionType"></el-table-column>
                         <el-table-column fixed="right"              label="操作"      width="100">
                             <template slot-scope="scope">
                                 <el-button @click.native.prevent="updataAddQuestionnaires(scope.$index, Questionnaire.QuestionnaireData)" type="text" size="small">修改</el-button>
@@ -197,6 +197,7 @@
                 this.outerAnswer = false
             },
             SaveAddQuestionnaires:function(){
+                debugger
                 var QuestionnaireData = this.Questionnaire.QuestionnaireData;
                 QuestionnaireData.push(this.AddQuestionnaires);
                 this.AddQuestionnaires={}
@@ -269,16 +270,29 @@
                     url: '/api/EditQuestionnaireManagementLoad',
                     data: qs.stringify(loginParams)
                 }).then(data => {
+                    debugger
                     if (data.data.code== "true"){
                         _this.Questionnaire = data.data.data;
                         _this.Questionnaire.proId = data.data.data.projectId;
-                        _this.Questionnaire.QuestionnaireData = _this.objectToArr(data.data.data.QuestionnaireData);
-                        var ss = _this.Questionnaire.QuestionnaireData;
-                       // _this.Questionnaire.QuestionnaireData = data.data.data.QuestionnaireData;
-
+                        var QuestionnaireData = _this.objectToArr(data.data.data.QuestionnaireData);
+                        if(QuestionnaireData.length>0){
+                            _this.Questionnaire.QuestionnaireData = _this.objectToArr(data.data.data.QuestionnaireData);
+                        }
                     }
                 });
-            }
+            },
+            formatAnswerType(row,column){
+                var returnData='';
+                if(this.answerTypes.length>0){
+                    return this.formatData(this.answerTypes,row,"answerType");
+                }
+            },
+            formatExhibitionType(row,column){
+                var returnData='';
+                if(this.exhibitionTypes.length>0){
+                    return this.formatData(this.exhibitionTypes,row,"exhibitionType");
+                }
+            },
         },
         mounted() {
             this.initData();

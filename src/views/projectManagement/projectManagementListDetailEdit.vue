@@ -1,21 +1,20 @@
 <template>
-    <div>
+    <div  style="width: 80%;margin: 0 auto;">
         <el-form :inline="true" :model="project" class="demo-form-inline">
             <el-form-item label="项目名称">
                 <el-input v-model="project.name" value="fildId" placeholder="项目名称"></el-input>
             </el-form-item>
-            <el-form-item label="一级分类">
-                <el-select v-model="project.classOne" placeholder="一级分类">
-                    <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="起始时间">
-                <el-date-picker type="date" placeholder="选择日期"  v-model="project.startTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
-            </el-form-item>
-            <el-button type="primary" @click="SaveProjectData">保存项目</el-button>
             <el-form-item label="机构名称">
                 <el-select v-model="project.orgs"  multiple  placeholder="请选择">
                     <el-option v-for="item in Orgitems" :key="item.id" :label="item.name" :value="item.code"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-button type="primary" @click="SaveProjectData">保存项目</el-button>
+            <el-button type="primary" @click="closeProject">关闭项目</el-button>
+            <el-form-item label="一级分类">
+                <el-select v-model="project.classOne" placeholder="一级分类">
+                    <el-option v-for="item in classOnes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="二级分类">
@@ -23,11 +22,14 @@
                     <el-option v-for="item in classTwos" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="起始时间">
+                <el-date-picker type="date" placeholder="选择日期"  v-model="project.startTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
+            </el-form-item>
+
+
             <el-form-item label="结束时间">
                 <el-date-picker type="date" placeholder="选择日期" v-model="project.endTime"  style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
-            <el-button type="primary" @click="closeProject">关闭项目</el-button>
-
         </el-form>
         <!-- 相关文件 -->
         <div style="margin-bottom: 15px">
@@ -56,8 +58,8 @@
                 <el-table-column label="相关文件">
                     <el-table-column type="selection" width="55"> </el-table-column>
                     <el-table-column prop="policyName" label="文件名称" width="300"></el-table-column>
-                    <el-table-column prop="classOne" label="一级分类" width="150"></el-table-column>
-                    <el-table-column prop="classTwo" label="二级分类" width="150"></el-table-column>
+                    <el-table-column prop="classOne" label="一级分类" width="150" :formatter="formatClassOnes"></el-table-column>
+                    <el-table-column prop="classTwo" label="二级分类" width="150"  :formatter="formatClassTwos"></el-table-column>
                     <el-table-column fixed="right"              label="操作"      width="80">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="deleteSelectionTableRowFiled(scope.$index, filds)" type="text" size="small">移除</el-button>
@@ -168,10 +170,13 @@
                 id: this.$route.params.id,
                 outerVisible: false,
                 outerVisibleFile: false,
+                policyDocumentClassTwos:[],
                 formInline: {
                     user: '',
                     region: ''
                 },
+                Valuedata:{},
+                AllSpeciaData:{},
                 tableData3: [],
                 options: [{
                     value: '选项1',
@@ -216,6 +221,7 @@
                 })
             },
             AddRowFile(){
+                debugger
                 var _this = this
                 var selectAllPolicyDocumentData = _this.selectAllPolicyDocumentData
                 var AllPolicyDocumentData = _this.AllPolicyDocumentData
@@ -224,9 +230,12 @@
                     for(let key  in AllPolicyDocument){
                         var value = AllPolicyDocument[key];
                         if(key == "id" && value == selectAllPolicyDocumentData){
+                            this.Valuedata = AllPolicyDocument;
                             _this.AjaxJson("insertProjectPolicyDocument",{projectId:_this.project.id,policyDocumentId:AllPolicyDocument.id},function(data){
                                 if (data.data.code== "true"){
-                                    _this.filds.push(AllPolicyDocument)
+                                    _this.filds.push(_this.Valuedata)
+                                }else{
+                                    _this.messageOk(data.data.message)
                                 }
                             });
 
@@ -245,14 +254,18 @@
                     for(let key  in AllSpecia){
                         var value = AllSpecia[key];
                        if(key == "code" && value == selectSpecialist){
+                           this.AllSpeciaData = AllSpecia;
                            _this.AjaxJson("insertProjectOrgUser",{projectId:_this.project.id,userId:AllSpecia.id,orgCode:_this.pgxx_orgs},function(data){
+                              debugger
                                if (data.data.code== "true"){
-                                   obj.userName = AllSpecia.name;
-                                   obj.SpecialistId = AllSpecia.id;
-                                   obj.userPhone = AllSpecia.phone;
-                                   obj.userRemarks = AllSpecia.remarks;
+                                   obj.userName = _this.AllSpeciaData.name;
+                                   obj.SpecialistId = _this.AllSpeciaData.id;
+                                   obj.userPhone = _this.AllSpeciaData.phone;
+                                   obj.userRemarks = _this.AllSpeciaData.remarks;
                                    obj.OrgCode = _this.pgxx_orgs
                                    _this.SpecialistTable.push(obj)
+                               }else{
+                                    _this.messageError(data.data.message);
                                }
                            });
 
@@ -317,7 +330,19 @@
             },
             closeProject(){
                 this.$router.push('/xmgl');
-            }
+            },
+            formatClassOnes(row,column){
+                var returnData='';
+                if(this.classOnes.length>0){
+                    return this.formatData(this.classOnes,row,"classOne");
+                }
+            },
+            formatClassTwos(row,column){
+                var returnData='';
+                if(this.policyDocumentClassTwos.length>0){
+                    return this.formatData(this.policyDocumentClassTwos,row,"classTwo");
+                }
+            },
         },
         mounted() {
             this.init();
@@ -340,15 +365,10 @@
             this.selectAllPolicyDocument(function(data){
                 _this.AllPolicyDocumentData = data;
             });
+            //加载项目二级分类
+            this.getDictAllByDictTypeId('POLICY_DOCUMENT_TWO',function(data){
+                _this.policyDocumentClassTwos = data;
+            });
         },
     }
-
-
-
 </script>
-
-<style>
-    .el-input{
-        width: 300px;
-    }
-</style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 80%;margin: 0 auto;">
         <el-form :inline="true" :model="questionnaire" class="demo-form-inline">
             <el-form-item label="问卷名称">
                 <el-input v-model="questionnaire.name"  placeholder="问卷名称"></el-input>
@@ -28,10 +28,10 @@
         <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" height="250" style="width: 100%;height: 400px">
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column prop="name" label="问卷名称" width="300"></el-table-column>
-            <el-table-column prop="proName" label="所属项目" width="300"></el-table-column>
-            <el-table-column prop="crowdOriented" label="面向人群" width="100"></el-table-column>
-            <el-table-column prop="type" label="问卷类型" width="100"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="300">
+            <el-table-column prop="proName" label="所属项目" width="232"></el-table-column>
+            <el-table-column prop="crowdOriented" label="面向人群" width="100" :formatter="formatCrowdOriented"></el-table-column>
+            <el-table-column prop="type" label="问卷类型" width="100" :formatter="formatType"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="210">
                 <template slot-scope="scope">
                     <el-button @click.native.prevent="editQuestionnaire(scope.$index, tableData)" type="text" size="small">编辑问卷</el-button>
                     <el-button @click.native.prevent="deleteQuestionnaire(scope.$index, tableData)" type="text" size="small">删除问卷</el-button>
@@ -86,7 +86,6 @@
             this.getDictAllByDictTypeId('QUESTIONNAIRE_CROWD_ORIENTED',function(data){
                 _this.crowdOrienteds = data;
             });
-            //加载面向人群
             this.getDictAllByDictTypeId('QUESTIONNAIRE_TYPE',function(data){
                 _this.types = data;
             });
@@ -152,13 +151,24 @@
                     }
                 });
             },
+            formatCrowdOriented(row,column){
+                var returnData='';
+                if(this.crowdOrienteds.length>0){
+                    return this.formatData(this.crowdOrienteds,row,"crowdOriented");
+                }
+            },
+            formatType(row,column){
+                var returnData='';
+                if(this.types.length>0){
+                    return this.formatData(this.types,row,"type");
+                }
+            },
         },
 
     }
 </script>
-
 <style>
-    .el-input{
-        width: 300px;
+    .el-input__inner{
+        width:300px;
     }
 </style>
