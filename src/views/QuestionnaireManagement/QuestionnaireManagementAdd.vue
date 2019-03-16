@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 80%;margin: 0 auto;">
         <el-form :inline="true" :model="Questionnaire" class="demo-form-inline">
             <el-form-item label="问卷名称">
                 <el-input v-model="Questionnaire.name" value="fildId"  placeholder="项目名称"></el-input>

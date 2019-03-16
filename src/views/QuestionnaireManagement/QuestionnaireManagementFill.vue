@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 80%;margin: 0 auto;">
         <el-form :inline="true" :model="Questionnaire" class="demo-form-inline">
             <el-form-item label="问卷名称">
                 <el-input v-model="Questionnaire.name" :disabled="true"  placeholder="项目名称"></el-input>
@@ -29,9 +29,9 @@
 
         </el-form>
             <div style="margin-bottom: 15px">
-                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData"  tooltip-effect="dark" style="width:100%;height: 350px">
+                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData"  tooltip-effect="dark" style="width:100%;height: 330px">
                     <el-table-column type="selection" width="60"> </el-table-column>
-                    <el-table-column prop="content" label="问题内容" width="550"></el-table-column>
+                    <el-table-column prop="content" label="问题内容" width="400"></el-table-column>
                     <el-table-column prop="answerType" label="答案类型" width="200"></el-table-column>
                     <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="200"></el-table-column>
                     <el-table-column fixed="right"              label="操作"      width="120">
