@@ -170,7 +170,7 @@
 
     }
 </script>
-<style>
+<style scoped>
     .el-input__inner{
         width:250px;
     }

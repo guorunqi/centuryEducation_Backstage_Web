@@ -197,7 +197,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .el-form-item__label{
         width:68px;
     }
