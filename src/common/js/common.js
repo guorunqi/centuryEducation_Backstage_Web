@@ -86,6 +86,9 @@ export default {
         Vue.prototype.messageError = function(message){
             this.$message.error('错了哦，这是一条错误消息');
         };
+        Vue.prototype.messageErrorEdit = function(message){
+            this.$message.error(message);
+        };
         Vue.prototype.AjaxJson = function(url,loginParams,trueFunction){
             this.$ajax({
                 method: 'post',
@@ -119,6 +122,20 @@ export default {
                 if(data[i].dictId==row[type]){
                     return data[i].dictName;
                 }
+            }
+        };
+        Vue.prototype.formatOrg=function(data,row,type){
+            for(var i=0;i<data.length;i++){
+                if(data[i].code==row[type]){
+                    return data[i].name;
+                }
+            }
+        };
+        Vue.prototype.dateFormat=function(row,type){
+            var val =row[type]
+            if (val != null) {
+                var date = new Date(val);
+                return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
             }
         };
     }

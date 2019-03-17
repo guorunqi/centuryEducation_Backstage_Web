@@ -64,8 +64,8 @@
                 <el-table-column label="相关文件">
                     <el-table-column type="selection" width="55"> </el-table-column>
                     <el-table-column prop="policyName" label="文件名称" width="400"></el-table-column>
-                    <el-table-column prop="classOne" label="一级分类" width="200"></el-table-column>
-                    <el-table-column prop="classTwo" label="二级分类" width="200"></el-table-column>
+                    <el-table-column prop="classOne" label="一级分类" width="200" :formatter="formatClassOnes"></el-table-column>
+                    <el-table-column prop="classTwo" label="二级分类" width="200"  :formatter="formatClassTwos"></el-table-column>
                     <el-table-column fixed="right"              label="操作"      width="143">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, filds)" type="text" size="small">移除</el-button>
@@ -114,7 +114,7 @@
         <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
             <el-table-column label="涉及专家">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="SpecialistSchool"    label="评估学校"  width="393"></el-table-column>
+                <el-table-column prop="SpecialistSchool"    label="评估学校"  width="393" :formatter="formatSpecialistSchool"></el-table-column>
                 <el-table-column prop="SpecialistName"      label="姓名"      width="150" ></el-table-column>
                 <el-table-column prop="SpecialistPhone"     label="电话"      width="150"></el-table-column>
                 <el-table-column prop="SpecialistRemarks"   label="备注"      width="150"></el-table-column>
@@ -170,6 +170,7 @@
                 selectSpecialist:'',//选择的专家
                 AllPolicyDocumentData:[],//所有政策文件
                 selectAllPolicyDocumentData:'',
+                policyDocumentClassTwos:[],
                 Org_select:[],
                 Orgitems: [],
                 AllSpecialist:[],
@@ -264,7 +265,23 @@
             },
             closeProject(){
                 this.$router.push('/xmgl');
-            }
+            },
+            formatClassOnes(row,column){
+                if(this.classOnes.length>0){
+                    return this.formatData(this.classOnes,row,"classOne");
+                }
+            },
+            formatClassTwos(row,column){
+                if(this.policyDocumentClassTwos.length>0){
+                    return this.formatData(this.policyDocumentClassTwos,row,"classTwo");
+                }
+            },
+            formatSpecialistSchool(row,column){
+                debugger
+                if(this.Org_select.length>0){
+                    return this.formatOrg(this.Org_select,row,"SpecialistSchool");
+                }
+            },
         },
         mounted() {
             var _this = this;
@@ -287,6 +304,19 @@
                 debugger
                 _this.AllPolicyDocumentData = data;
             });
+            //加载项目二级分类
+            this.getDictAllByDictTypeId('POLICY_DOCUMENT_TWO',function(data){
+                _this.policyDocumentClassTwos = data;
+            });
         },
     }
 </script>
+<style>
+    .el-form-item__label{
+        width:68px;
+    }
+
+    .el-input {
+        width: 300px;
+    }
+</style>

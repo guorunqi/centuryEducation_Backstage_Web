@@ -32,8 +32,8 @@
                     <el-table-column label="问卷问题">
                         <el-table-column type="selection" width="55"> </el-table-column>
                         <el-table-column prop="content" label="问题内容" width="300"></el-table-column>
-                        <el-table-column prop="answerType" label="答案类型" width="150"></el-table-column>
-                        <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="150"></el-table-column>
+                        <el-table-column prop="answerType" label="答案类型" width="150" :formatter="formatAnswerType"></el-table-column>
+                        <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="150" :formatter="formatExhibitionType"></el-table-column>
                         <el-table-column fixed="right"              label="操作"      width="100">
                             <template slot-scope="scope">
                                 <el-button @click.native.prevent="updataAddQuestionnaires(scope.$index, Questionnaire.QuestionnaireData)" type="text" size="small">修改</el-button>
@@ -196,9 +196,17 @@
                 this.outerAnswer = false
             },
             SaveAddQuestionnaires:function(){
-                var QuestionnaireData = this.Questionnaire.QuestionnaireData;
-                QuestionnaireData.push(this.AddQuestionnaires);
-
+                debugger
+                var obj = {};
+                obj.answerData = this.AddQuestionnaires.answerData;
+                obj.exhibitionType = this.AddQuestionnaires.exhibitionType;
+                obj.content = this.AddQuestionnaires.content;
+                obj.answerType = this.AddQuestionnaires.answerType;
+                this.Questionnaire.QuestionnaireData.push(obj);
+                this.AddQuestionnaires.answerData = [];
+                this.AddQuestionnaires.exhibitionType = "";
+                this.AddQuestionnaires.content = "";
+                this.AddQuestionnaires.answerType = "";
                 this.outerVisibleFile = false
             },
             deleteAddQuestionnaires:function(index, rows){
@@ -259,6 +267,16 @@
                         _this.Project = data.data.data;
                     }
                 });
+            },
+            formatAnswerType:function(row,column){
+                if(this.answerTypes.length>0){
+                    return this.formatData(this.answerTypes,row,"answerType");
+                }
+            },
+            formatExhibitionType:function(row,column){
+                if(this.exhibitionTypes.length>0){
+                    return this.formatData(this.exhibitionTypes,row,"exhibitionType");
+                }
             }
         },
         mounted() {

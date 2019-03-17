@@ -5,7 +5,7 @@
                 <el-input v-model="questionnaire.name"  placeholder="问卷名称"></el-input>
             </el-form-item>
             <el-form-item label="项目名称">
-                <el-input v-model="questionnaire.proName"  placeholder="项目名称"></el-input>
+                <el-input v-model="questionnaire.project.proName"  placeholder="项目名称"></el-input>
             </el-form-item>
             <el-form-item style="margin-left: 55px">
                 <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -117,7 +117,10 @@
                 this.init();
             },
             onReset() {
-                console.log('reset!');
+                this.questionnaire.name = "";
+                this.questionnaire.project.proName = "";
+                this.questionnaire.crowdOriented = "";
+                this.questionnaire.type = "";
             },
             add() {
                 this.$router.push({ name: '新增问卷管理',
@@ -169,6 +172,9 @@
 </script>
 <style>
     .el-input__inner{
-        width:300px;
+        width:250px;
+    }
+    .el-input {
+        width: 250px;
     }
 </style>
