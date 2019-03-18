@@ -19,6 +19,7 @@ import pgxq from './views/pggl/pgxq.vue'
 import xmgl from './views/projectManagement/projectManagementList.vue'
 import xmxq from './views/projectManagement/projectManagementListDetail.vue'
 import xmxqbj from './views/projectManagement/projectManagementListDetailEdit.vue'
+import zcwxxz from './views/PolicyDocumentManagement/policyDocumentManagementListAdd.vue'
 import zcwjgl from './views/PolicyDocumentManagement/policyDocumentManagementList.vue'
 import zcwjxq from './views/PolicyDocumentManagement/policydocumentManagementListDetail.vue'
 import wjgl from './views/QuestionnaireManagement/QuestionnaireManagementList.vue'
@@ -59,6 +60,7 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/zcwxgl', component: zcwjgl, name: '政策文件管理' },
+            { path: '/zcwxxz', component: zcwxxz, name: '政策文件新增' },
             { path: '/zcwjxq/:id', component: zcwjxq, name: '政策文件详情' }
         ]
     },

@@ -25,13 +25,11 @@
             </el-form-item>
             <el-form-item label="状态">
                 <el-select v-model="project.status" placeholder="状态">
-                    <el-option label="未发布" value="weifabu"></el-option>
-                    <el-option label="进行中" value="jinxingzhong"></el-option>
-                    <el-option label="已结束" value="yijieshu"></el-option>
+                    <el-option label="未发布" value="wfb"></el-option>
+                    <el-option label="进行中" value="jxz"></el-option>
+                    <el-option label="已结束" value="yjs"></el-option>
                 </el-select>
             </el-form-item>
-
-
         </el-form>
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增</el-button>
@@ -41,7 +39,7 @@
             <el-table-column prop="name" label="项目名称" width="250"></el-table-column>
             <el-table-column prop="classOne" label="一级分类" width="110" :formatter="formatClassOnes"></el-table-column>
             <el-table-column prop="classTwo" label="二级分类" width="110" :formatter="formatClassTwos"></el-table-column>
-            <el-table-column prop="" label="机构名称" width="220"></el-table-column>
+            <el-table-column prop="org" label="机构名称" width="220"></el-table-column>
             <el-table-column prop="stutas" label="状态" width="80" :formatter="formatStatus"></el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
                 <template slot-scope="scope">
@@ -50,19 +48,6 @@
                 </template>
             </el-table-column>
         </el-table>
-       <!-- <div class="block">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="200"
-                    width="1000px">
-
-            </el-pagination>
-        </div>-->
     </div>
 </template>
 
@@ -79,7 +64,7 @@
                     orgs:'',
                     name:'',
                     classOne:'',
-                    status:'',
+                    status:[],
                     classTwo:''
                 },
                 fileId:0,
@@ -125,19 +110,6 @@
                     }
                 });
             },
-            /*onSubmit() {
-                var _this = this
-                this.$ajax({
-                    method: 'post',
-                    url: '/api/projectLoad',
-                    data: qs.stringify({"name":this.project.name,"classOne":this.project.classOne,"status":this.project.status,"orgs":this.project.orgs,"classTwo":this.project.classTwo})
-                }).then(data => {
-                    if (data.data.code== "true"){
-                        _this.tableData.splice(0,_this.tableData.length)
-                        _this.tableData = data.data.data;
-                    }
-                })
-            },*/
             onSubmit() {
                 var _this = this
                 this.AjaxJson("projectLoad",
@@ -150,7 +122,12 @@
                     });
             },
             onReset() {
-                console.log('reset!');
+                this.project.name = "";
+                this.project.orgs = "";
+                this.project.classOne = "";
+                this.project.classTwo = "";
+                this.project.status = "";
+
             },
             add() {
                 this.$router.push({ name: '项目详情',
@@ -189,31 +166,43 @@
 
             },
             formatClassOnes(row,column){
-                var returnData='';
                 if(this.classOnes.length>0){
                     return this.formatData(this.classOnes,row,"classOne");
                 }
             },
             formatClassTwos(row,column){
-                var returnData='';
                 if(this.classTwos.length>0){
                     return this.formatData(this.classTwos,row,"classTwo");
                 }
             },
             formatStatus(row,column){
-                var returnData='';
-                if(this.status.length>0){
-                    return this.formatData(this.status,row,"stutas");
+                debugger
+                if(this.status != null){
+                    if(this.status.length>0){
+                        return this.formatData(this.status,row,"stutas");
+                    }
                 }
             },
-
+            /*formatOrg(row,column){
+                debugger
+                var orgs = row.orgs;
+                if(orgs != null){
+                    if(orgs.length>0){
+                        return this.formatData(this.status,row,"stutas");
+                    }
+                }
+            },*/
         },
 
     }
 </script>
 
-<style>
-    .el-input__inner{
-        width:300px;
+<style scoped>
+    .el-form-item__label{
+        width:68px;
+    }
+
+    .el-input {
+        width: 300px;
     }
 </style>

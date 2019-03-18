@@ -17,12 +17,13 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="备注">
-                <el-input type="textarea" :rows="2" style="width: 600px;" placeholder="政策文件名称" v-model="policyDocument.remarks"/>
+                <el-input type="textarea" :rows="2" style="width: 600px;" placeholder="政策文件名称" v-model="policyDocument.remarks">
+                </el-input>
             </el-form-item>
 
 
             <div class="hello">
-                <el-button type="primary" icon="plus" @click="outerVisibleFile = true">新增条目</el-button>
+                <el-button type="primary" icon="plus" @click="addTiaomu">新增条目</el-button>
                 <tree-grid :columns="columns" :tree-structure="true" :data-source="dataSource" v-on:childMethod="TreeAddSubordinatePolicyDocument" v-on:childEdit="TreeEditSubordinate" v-on:childDelete="TreeDeleteSubordinate"></tree-grid>
                 <el-dialog title="新增条目" :visible.sync="outerVisibleFile">
                     <el-form ref="form" :model="form" label-width="auto">
@@ -213,11 +214,18 @@
             },
             closeProject(){
                 this.$router.push('/zcwxgl');
-            }
+            },
+            addTiaomu(){
+                if(this.policyDocument.id == null){
+                    this.messageErrorEdit("请先保存政策文件")
+                    return
+                }
+                this.outerVisibleFile = true
+            },
         },
         mounted() {
             this.policyDocument.id = this.id
-            this.load()
+            //this.load()
             var _this = this;
             //加载项目一级分类
             this.getDictAllByDictTypeId('PROJECT_CLASS_ONE',function(data){

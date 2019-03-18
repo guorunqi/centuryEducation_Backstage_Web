@@ -262,7 +262,7 @@
                                    obj.SpecialistId = _this.AllSpeciaData.id;
                                    obj.userPhone = _this.AllSpeciaData.phone;
                                    obj.userRemarks = _this.AllSpeciaData.remarks;
-                                   obj.OrgCode = _this.pgxx_orgs
+                                   obj.OrgCode = _this.pgxx_orgs;
                                    _this.SpecialistTable.push(obj)
                                }else{
                                     _this.messageError(data.data.message);
@@ -332,6 +332,7 @@
                 this.$router.push('/xmgl');
             },
             formatClassOnes(row,column){
+                debugger
                 var returnData='';
                 if(this.classOnes.length>0){
                     return this.formatData(this.classOnes,row,"classOne");
