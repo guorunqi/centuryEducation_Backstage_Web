@@ -5,7 +5,7 @@
                 <el-input v-model="selfEvaluation.name" placeholder="项目名称"></el-input>
             </el-form-item>
             <el-form-item label="所属项目">
-                <el-select v-model="selfEvaluation.projectId"  @change="projectChangeData" placeholder="请选择">
+                <el-select v-model="selfEvaluation.projectId"  onValueChange="projectChangeData" placeholder="请选择">
                     <el-option v-for="project in projects" :key="project.id" :label="project.name" :value="project.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -54,11 +54,11 @@
     import qs from 'qs';
     import  router from "../../routes.js"
     export default {
-        name: "projectManagementList",
         data() {
         return {
             selfEvaluation:{
-
+                name:'',
+                projectId:''
             },
             selfEvaluationEntrys:[],
             SpecialistTable:[],// 专家列表      *
@@ -83,7 +83,8 @@
                 title: '',
                 sortno: ''
             },
-            selectSelfEvaluationEntrys:[]
+            selectSelfEvaluationEntrys:[],
+            id:'-1'
         }
     },
     methods: {
@@ -108,7 +109,7 @@
                         message: '增加数据成功！',
                         type: 'success'
                     });
-
+                    this.id=data.data.data;
                     this.queryselfEvaluationEntrys();
                     this.selfEvaluationEntry={};
                 }else {
@@ -180,7 +181,7 @@
                 this.$ajax({
                     method: 'post',
                     url: '/api/querySelfEvaluationEntryBySelfEvaluationID',
-                    data: {id:this.selfEvaluation.id}
+                    data: {id:this.id}
                 }).then(data => {
                     if (data.data.code== "true"){
                         this.selfEvaluationEntrys=data.data.data;
@@ -193,8 +194,8 @@
             this.outerVisibleFile = false;
         },
         openFrom(){
-            var selfEvaluation=this.selfEvaluation;
-            if(selfEvaluation.id==null||selfEvaluation==""){
+            var id=this.id;
+            if(id==null||id==""||id=="-1"){
                 this.$message({
                     showClose: true,
                     message: '请先保存自评',
@@ -202,7 +203,7 @@
                 });
             }else{
                 this.selfEvaluationEntry={};
-                this.selfEvaluationEntry.selfEvaluationId=selfEvaluation.id;
+                this.selfEvaluationEntry.selfEvaluationId=id;
                 this.outerVisibleFile = true;
             }
         },
@@ -274,15 +275,9 @@
         var _this = this;
         //加载 项目
         this.queryProject();
-        if(this.id!=null&&this.id!=0){
+        if(this.id!=null&&this.id!=0&&this.id!=-1){
             this.queryselfEvaluation();
         }
-        this.selectAllSpecialist(function(data){
-            _this.AllSpecialist = data;
-        });
-        this.selectAllPolicyDocument(function(data){
-            _this.AllPolicyDocumentData = data;
-        });
     },
     }
 

@@ -686,7 +686,7 @@
                     _this.quota=data.data.data;
                     _this.querySelfEvaluationEntrys();
                     _this.queryDocumentEntrys();
-                    _this.queryProblems();
+                    _this.queryQuotaProblems();
                     _this.outerVisibleFile = true;
                 }else {
                     _this.$message.error('获取数据失败！请联系管理员。');
