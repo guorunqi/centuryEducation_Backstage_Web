@@ -176,7 +176,6 @@
                 }
             },
             formatStatus(row,column){
-                debugger
                 if(this.status != null){
                     if(this.status.length>0){
                         return this.formatData(this.status,row,"stutas");

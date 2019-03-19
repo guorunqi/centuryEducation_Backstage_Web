@@ -72,49 +72,70 @@
             <el-button type="primary" icon="plus" @click="openFrom">新增顶级指标</el-button>
             <!-- 添加指标页面 -->
             <el-dialog title="添加指标" :visible.sync="outerVisibleFile">
-                <el-form ref="form" :model="quota" label-width="auto">
+                <div style="border:1px solid #A9A9A9;padding: 1%">
+                    <el-form ref="form" :model="quota" label-width="auto">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="指标层级:">
+                                    <el-input type="remarks" v-model="quota.hierarchy" :disabled="true"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="指标编码:">
+                                    <el-input type="remarks" v-model="quota.code"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="指标名称:">
+                                    <el-input type="remarks" v-model="quota.name"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="权重/分值:">
+                                    <el-input v-model="quota.weight" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="评估内容:">
+                                    <el-input type="textarea" v-model="quota.content"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                    </el-form>
+
+
+
                     <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="指标层级:">
-                                <el-input type="remarks" v-model="quota.hierarchy" :disabled="true"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="指标编码:">
-                                <el-input type="remarks" v-model="quota.code"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item label="指标名称:">
-                                <el-input type="remarks" v-model="quota.name"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="权重/分值:">
-                                <el-input v-model="quota.weight" auto-complete="off"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="24">
-                            <el-form-item label="评估内容:">
-                                <el-input type="textarea" v-model="quota.content"></el-input>
-                            </el-form-item>
+                        <el-col :span="24" v-for="(quotaOrgUser,index) in quotaOrgUsers">
+                            <el-row>
+                                <el-col :span="3">
+                                    机构名称:
+                                </el-col>
+                                <el-col :span="5">
+                                    {{quotaOrgUser.orgName}}
+                                </el-col>
+                                <el-col :span="2">
+                                    专家:
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-select v-model="quotaOrgUser.userID" placeholder="请选择">
+                                        <el-option v-for="expert in experts" :key="expert.id" :label="expert.name" :value="expert.id"></el-option>
+                                    </el-select>
+                                </el-col>
+                            </el-row>
                         </el-col>
                     </el-row>
 
-                </el-form>
-                <el-table ref="expertTable" :data="experts" border tooltip-effect="dark" style="width: 100%;height: 400px">
-                    <el-table-column label="评估专家">
-                        <el-table-column type="selection" width="55"> </el-table-column>
-                        <el-table-column prop="title" label="学校" ></el-table-column>
-                        <el-table-column prop="title" label="专家" ></el-table-column>
-                    </el-table-column>
-                </el-table>
-
-
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="addQuota">保存</el-button>
+                        <el-button @click="closeFrom">取 消</el-button>
+                    </div>
+                </div>
 
                 <div style="margin-bottom: 15px;width: 80%;margin: 0 auto;">
                     <el-button size="" @click="addPolicyDocumentEntry1">新建文件条目</el-button>
@@ -216,10 +237,7 @@
 
 
 
-                <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="addQuota">保存</el-button>
-                    <el-button @click="closeFrom">取 消</el-button>
-                </div>
+
             </el-dialog>
         </div>
 
@@ -328,6 +346,10 @@
             ],
             //指标ID
             editQuotaSelfEvaluationEntryID:'',
+            //指标下机构专家数组
+            quotaOrgUsers:[],
+            //可选专家
+            experts:[],
 
 
             //------------------指标关联自评题目相关-----------------------------
@@ -440,6 +462,8 @@
                         message: '保存数据成功！',
                         type: 'success'
                     });
+                    this.assessment={};
+                    this.assessment.id=data.data.data;
                 }else {
                     this.$message.error('保存数据失败！请联系管理员。');
                 }
@@ -485,6 +509,8 @@
                     type: 'warning'
                 });
             }else{
+                this.queryExpert();
+                this.queryProjectOrgUser();
                 this.quota.assessmentId=assessment.id;
                 this.quota.hierarchy='A'
                 this.outerVisibleFile = true;
@@ -621,6 +647,26 @@
                 if (data.data.code== "true"){
                     this.quotas=data.data.data;
                 }
+            });
+        },
+        //获取可以选择的专家列表
+        queryExpert(){
+            this.$ajax({
+                method: 'post',
+                url: '/api/queryProjectOrgUserByProjectID',
+                data:{projectID:this.assessment.projectId}
+            }).then(data => {
+                this.experts=data.data.data;
+            });
+        },
+        //获取指标所在项目的机构和专家
+        queryProjectOrgUser(){
+            this.$ajax({
+                method: 'post',
+                url: '/api/SelfEvaluationEntryResult/queryProjectOrgByProjectIDAndQuotaID',
+                data:{projectID:this.assessment.projectId,quotaID:this.editQuotaSelfEvaluationEntryID}
+            }).then(data => {
+                this.quotaOrgUsers=data.data.data;
             });
         },
         //指标树指标新增

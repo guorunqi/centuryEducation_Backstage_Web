@@ -5,7 +5,7 @@
                 <el-input v-model="selfEvaluation.name" placeholder="项目名称"></el-input>
             </el-form-item>
             <el-form-item label="所属项目">
-                <el-select v-model="selfEvaluation.projectId"  onValueChange="projectChangeData" placeholder="请选择">
+                <el-select v-model="selfEvaluation.projectId"  @change="projectChangeData" placeholder="请选择">
                     <el-option v-for="project in projects" :key="project.id" :label="project.name" :value="project.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -84,7 +84,7 @@
                 sortno: ''
             },
             selectSelfEvaluationEntrys:[],
-            id:'-1'
+            id:this.$route.params.id
         }
     },
     methods: {
@@ -109,7 +109,6 @@
                         message: '增加数据成功！',
                         type: 'success'
                     });
-                    this.id=data.data.data;
                     this.queryselfEvaluationEntrys();
                     this.selfEvaluationEntry={};
                 }else {
@@ -155,6 +154,7 @@
                         type: 'success'
                     });
 
+                    this.id=data.data.data;
                     this.queryselfEvaluationEntrys();
                     this.selectSelfEvaluationEntrys={};
                 }else {

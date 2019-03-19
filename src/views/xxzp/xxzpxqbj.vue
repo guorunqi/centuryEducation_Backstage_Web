@@ -5,13 +5,13 @@
                 <el-input v-model="selfEvaluation.name" value="fildId" placeholder="项目名称" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="所属项目">
-                <el-select v-model="selfEvaluation.projectId"  @change="projectChangeData" placeholder="请选择" :disabled="true">
+                <el-select v-model="selfEvaluation.projectId"  placeholder="请选择" :disabled="true">
                     <el-option v-for="project in projects" :key="project.id" :label="project.name" :value="project.id"></el-option>
                 </el-select>
             </el-form-item>
 
             <el-form-item label="学校名称">
-                <el-select v-model="orgID"  @change="projectChangeData" placeholder="请选择">
+                <el-select v-model="orgID"  @change="orgChangeData" placeholder="请选择">
                     <el-option v-for="org in orgs" :key="org.id" :label="org.name" :value="org.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -30,7 +30,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="AddSelfEvaluationEntry">保存</el-button>
+                    <el-button type="primary" @click="saveSelfEvaluationEntryResult">保存</el-button>
                     <el-button @click="closeFrom">取 消</el-button>
                 </div>
             </el-dialog>
@@ -42,11 +42,14 @@
             </el-table-column>
         </el-table>
 
-        <quill-editor
-                v-model="content"
-                ref="myQuillEditor"
-                :options="editorOption">
-        </quill-editor>
+        <div slot="footer" class="dialog-footer" style="margin-left: 10%;">
+            <el-button type="primary" @click="saveSelfEvaluationEntryResult">保存</el-button>
+
+            <el-input type="textarea" v-model="selfEvaluationEntryResult.resultContent" auto-complete="off" style="width: 80%;" :rows="7"></el-input>
+        </div>
+
+
+
 
 
 
@@ -64,7 +67,7 @@
         data() {
         return {
             selfEvaluation:{
-
+                resultContent:""
             },
             selfEvaluationEntrys:[],
             SpecialistTable:[],// 专家列表      *
@@ -94,7 +97,13 @@
             orgs:[],
             orgID:{},
             content:null,
-            editorOption:{}
+            editorOption:{},
+            selfEvaluationEntryResult:{
+
+            },
+            selectProjectOrg:{
+                id:""
+            }
         }
     },
     methods: {
@@ -187,6 +196,7 @@
                 }).then(data => {
                     if (data.data.code== "true"){
                         this.selfEvaluationEntrys=data.data.data;
+
                     }
                 });
             }
@@ -216,6 +226,10 @@
                 }
             }
         },
+        orgChangeData(row){
+            this.selectProjectOrg={};
+            this.selectProjectOrg.id=row;
+        },
         queryselfEvaluation(){
             this.$ajax({
                 method: 'post',
@@ -225,6 +239,7 @@
                 if (data.data.code== "true"){
                     this.selfEvaluation=data.data.data;
                     this.queryOrg();
+                    this.queryselfEvaluationEntrys();
                 }
             });
         },
@@ -274,16 +289,40 @@
         queryOrg(){
             this.$ajax({
                 method: 'post',
-                url: '/api/SelfEvaluationEntry/queryOrgByProjectID',
+                url: '/api/SelfEvaluationEntryResult/queryProjectOrgByProjectID',
                 data: {id:this.selfEvaluation.projectId}
             }).then(data => {
                 if (data.data.code== "true"){
                     this.orgs=data.data.data;
+                    this.selectProjectOrg=this.orgs[this.orgs.length-1];
                 }
             });
         },
         handleCurrentChange(val){
-
+            this.$ajax({
+                method: 'post',
+                url: '/api/querySelfEvaluationEntryResultByOrgID',
+                data:{data:JSON.stringify({selfEvaluationEntryId:val.id,projectOrgId:this.selectProjectOrg.id})}
+            }).then(data => {
+                this.selfEvaluationEntryResult=data.data.data;
+            });
+        },
+        saveSelfEvaluationEntryResult(){
+            this.$ajax({
+                method: 'post',
+                url: '/api/saveSelfEvaluationEntryResult',
+                data:{data:JSON.stringify(this.selfEvaluationEntryResult)}
+            }).then(data => {
+                if(data.data.code=="true"){
+                    this.$message({
+                        message: '保存数据成功！',
+                        type: 'success'
+                    });
+                    this.selfEvaluationEntryResult=data.data.data;
+                }else {
+                    this.$message.error('保存数据失败！请联系管理员。');
+                }
+            });
         }
     },
     mounted() {
@@ -291,15 +330,9 @@
         //加载 项目
         this.queryProject();
         if(this.id!=null&&this.id!=0){
-            this.queryselfEvaluationEntrys();
+
             this.queryselfEvaluation();
         }
-        this.selectAllSpecialist(function(data){
-            _this.AllSpecialist = data;
-        });
-        this.selectAllPolicyDocument(function(data){
-            _this.AllPolicyDocumentData = data;
-        });
     },
     }
 
