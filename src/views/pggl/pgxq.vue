@@ -420,6 +420,8 @@
                         message: '操作数据成功！',
                         type: 'success'
                     });
+                    this.quota=data.data.data;
+                    this.saveProjectOrgUsers();
                     this.quota={};
                     this.queryQuota();
                 }else {
@@ -646,6 +648,26 @@
             }).then(data => {
                 if (data.data.code== "true"){
                     this.quotas=data.data.data;
+                }
+            });
+        },
+        //保存指标的专家选择
+        saveProjectOrgUsers(){
+            for(var i=0;i<this.quotaOrgUsers.length;i++){
+                this.quotaOrgUsers[i].quotaId=this.quota.id;
+            }
+            this.$ajax({
+                method: 'post',
+                url: '/api/saveQuotaResults',
+                data:{data:JSON.stringify(this.quotaOrgUsers)}
+            }).then(data => {
+                if(data.data.code=="true"){
+                    this.$message({
+                        message: '保存数据成功！',
+                        type: 'success'
+                    });
+                }else {
+                    this.$message.error('保存数据失败！请联系管理员。');
                 }
             });
         },
