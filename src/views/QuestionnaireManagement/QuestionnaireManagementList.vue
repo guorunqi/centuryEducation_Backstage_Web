@@ -167,7 +167,6 @@
                 }
             },
         },
-
     }
 </script>
 <style scoped>
