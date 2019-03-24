@@ -14,6 +14,12 @@ import routes from './routes'
 //Mock.bootstrap();              -----------mock
 import axios from 'axios';
 
+//UE富文本
+import '../static/UE/ueditor.config.js'
+import '../static/UE/ueditor.all.min.js'
+import '../static/UE/lang/zh-cn/zh-cn.js'
+import '../static/UE/ueditor.parse.min.js'
+
 import  VueQuillEditor from 'vue-quill-editor';
 Vue.use(VueQuillEditor);
 

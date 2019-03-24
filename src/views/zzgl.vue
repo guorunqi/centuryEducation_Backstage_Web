@@ -78,7 +78,7 @@
 
                 <el-row>
                     <el-col :span="12">
-                        <el-form-item label="编码" prop="code">
+                        <el-form-item label="编码 *" prop="code">
                             <el-input v-model="org.code" auto-complete="off" style="width: 80%;"></el-input>
                         </el-form-item>
                     </el-col>
@@ -340,23 +340,27 @@
                 this.addFormVisible=true;
             },
             saveOrg(){
-                this.$ajax({method: 'post',
-                            url:'/api/saveOrg',
-                            data:{data:JSON.stringify(this.org)}
-                }).then(data =>{
-                    if(data.data.code=="true"){
-                        this.addFormVisible=false;
-                        this.$message({
-                            message: '增加数据成功！',
-                            type: 'success'
-                        });
+                if(this.org.code==null||this.org.code==''){
+                    this.$message.error('机构编码为必填项！');
+                }else{
+                    this.$ajax({method: 'post',
+                        url:'/api/saveOrg',
+                        data:{data:JSON.stringify(this.org)}
+                    }).then(data =>{
+                        if(data.data.code=="true"){
+                            this.addFormVisible=false;
+                            this.$message({
+                                message: '增加数据成功！',
+                                type: 'success'
+                            });
 
-                        this.queryOrgTreeData();
-                        this.clickNode={};
-                    }else {
-                        this.$message.error('增加数据失败！请联系管理员。');
-                    }
-                });
+                            this.queryOrgTreeData();
+                            this.clickNode={};
+                        }else {
+                            this.$message.error(data.data.data);
+                        }
+                    });
+                }
             },
             closeDialog(){
                 Object.assign(this.$data.org, this.$options.data().org);
