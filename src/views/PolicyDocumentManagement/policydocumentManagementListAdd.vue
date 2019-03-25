@@ -21,7 +21,6 @@
                 </el-input>
             </el-form-item>
 
-
             <div class="hello">
                 <el-button type="primary" icon="plus" @click="addTiaomu">新增条目</el-button>
                 <tree-grid :columns="columns" :tree-structure="true" :data-source="dataSource" v-on:childMethod="TreeAddSubordinatePolicyDocument" v-on:childEdit="TreeEditSubordinate" v-on:childDelete="TreeDeleteSubordinate"></tree-grid>
@@ -31,7 +30,11 @@
                             <el-input v-model="form.name" placeholder="请输入内容" style="width: 600px"></el-input>
                         </el-form-item><br>
                         <el-form-item label="条目内容：">
-                            <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.content" style="width: 600px"></el-input>
+                            <div slot="footer" class="dialog-footer" style="margin-left: 10%;">
+                                <!-- <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.content" style="width: 600px"></el-input> -->
+
+                            </div>
+
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -70,15 +73,34 @@
                     </div>
                 </el-dialog>
             </div>
+            <div slot="footer" class="dialog-footer" style="margin-left: 10%;">
+                <div class="components-container">
+                    <div class="editor-container">
+                        <UE :defaultMsg=selfEvaluationEntryResult.resultContent :config=config ref="ue"></UE>
+                    </div>
+                </div>
+            </div>
         </el-form>
     </div>
 </template>
+<style>
+    .info{
+        border-radius: 10px;
+        line-height: 20px;
+        padding: 10px;
+        margin: 10px;
+        background-color: #ffffff;
+    }
+</style>
 
 
 <script>
 
     import {TreeGrid} from '../../components/treeTable'
+    import UE from '../../UE.vue';
+
     export default {
+        components: {UE},
         name: "projectManagementList",
         data() {
             return {
@@ -93,6 +115,12 @@
                     content:'',
                     name:''
                 },
+                selfEvaluationEntryResult:{
+
+                },
+                selfEvaluation:{
+                    resultContent:""
+                },
                 TreeEditSubordinatePolicyDocumentData:{},
                 policyDocument: {
                     id:'',
@@ -101,6 +129,13 @@
                     classOne: '',//
                     classTwo: '',//
                 },//
+                //富文本
+                defaultMsg: '',
+                config: {
+                    initialFrameWidth: null,
+                    initialFrameHeight: 350,
+                    UEDITOR_HOME_URL: 'static/UE/'
+                },
                 outerVisibleFile:false,
                 addSubordinate:false,
                 editSubordinate:false,

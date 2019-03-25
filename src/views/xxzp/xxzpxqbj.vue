@@ -36,7 +36,7 @@
             </el-dialog>
         </div>
 
-        <el-table ref="selfEvaluationEntryTable" :data="selfEvaluationEntrys" highlight-current-row border tooltip-effect="dark" style="width: 100%;height: 400px" @current-change="handleCurrentChange">
+        <el-table ref="selfEvaluationEntryTable" :data="selfEvaluationEntrys" highlight-current-row border tooltip-effect="dark" style="width: 100%;" @current-change="handleCurrentChange">
             <el-table-column label="自评条目">
                 <el-table-column prop="title" label="条目标题" ></el-table-column>
             </el-table-column>
@@ -44,8 +44,11 @@
 
         <div slot="footer" class="dialog-footer" style="margin-left: 10%;">
             <el-button type="primary" @click="saveSelfEvaluationEntryResult">保存</el-button>
-
-            <el-input type="textarea" v-model="selfEvaluationEntryResult.resultContent" auto-complete="off" style="width: 80%;" :rows="7"></el-input>
+            <div class="components-container">
+                <div class="editor-container">
+                    <UE :defaultMsg=selfEvaluationEntryResult.resultContent :config=config ref="ue"></UE>
+                </div>
+            </div>
         </div>
 
 
@@ -57,12 +60,24 @@
     </div>
 </template>
 
+<style type="text/css">
+    .info{
+        border-radius: 10px;
+        line-height: 20px;
+        padding: 10px;
+        margin: 10px;
+        background-color: #ffffff;
+    }
+</style>
+
 
 <script>
     import common from '../../common/js/common.js';
     import qs from 'qs';
-    import  router from "../../routes.js"
+    import  router from "../../routes.js";
+    import UE from '../../UE.vue';
     export default {
+        components: {UE},
         name: "projectManagementList",
         data() {
         return {
@@ -103,6 +118,13 @@
             },
             selectProjectOrg:{
                 id:""
+            },
+            //富文本
+            defaultMsg: '',
+            config: {
+                initialFrameWidth: null,
+                initialFrameHeight: 350,
+                UEDITOR_HOME_URL: 'static/UE/'
             }
         }
     },
@@ -305,9 +327,12 @@
                 data:{data:JSON.stringify({selfEvaluationEntryId:val.id,projectOrgId:this.selectProjectOrg.id})}
             }).then(data => {
                 this.selfEvaluationEntryResult=data.data.data;
+                this.setUEContent(data.data.data.resultContent);
             });
         },
-        saveSelfEvaluationEntryResult(){
+        saveSelfEvaluationEntryResult(){debugger
+            let content = this.$refs.ue.getUEContent();
+            this.selfEvaluationEntryResult.resultContent=content;
             this.$ajax({
                 method: 'post',
                 url: '/api/saveSelfEvaluationEntryResult',
@@ -323,6 +348,18 @@
                     this.$message.error('保存数据失败！请联系管理员。');
                 }
             });
+        },
+        //富文本
+        getUEContent() {
+            let content = this.$refs.ue.getUEContent();
+            this.$notify({
+                title: '获取成功，可在控制台查看！',
+                message: content,
+                type: 'success'
+            });
+        },
+        setUEContent(data){
+            this.$refs.ue.setUEContent(data);
         }
     },
     mounted() {

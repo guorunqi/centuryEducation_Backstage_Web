@@ -294,7 +294,8 @@
                 });
             },
             SaveProjectData(){
-                var loginParams = {"project":this.project};
+                var orgs = this.project.orgs.join(',');
+                var loginParams = {"project":this.project,"orgs":orgs};
                 this.$ajax({
                     method: 'post',
                     url: '/api/upDataProjectData',
@@ -314,10 +315,9 @@
                     data: qs.stringify(loginParams)
                 }).then(data => {
                     if (data.data.code== "true"){
-                        //_this.project.orgs = data.data.data.Orgs;
                         _this.filds = data.data.data.PolicyDocumentList;
                         _this.SpecialistTable = data.data.data.SpecialistList;
-                        data.data.data.project.orgs = data.data.data.Orgs;
+                        data.data.data.project.orgs = data.data.data.orgs;
                         _this.project = data.data.data.project;
 
                     } else {

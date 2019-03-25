@@ -35,7 +35,7 @@
         </el-form>
         <!-- 相关文件 -->
         <div style="margin-bottom: 15px">
-            <el-button type="primary" icon="plus" @click="outerVisibleFile = true">新增文件</el-button>
+            <el-button type="primary" icon="plus" @click="AddFile()">新增文件</el-button>
             <div style="float: right">
                 <el-button type="primary" @click="SaveProjectData">保存项目</el-button>
                 <el-button type="primary" @click="closeProject">关闭项目</el-button>
@@ -68,7 +68,7 @@
                     <el-table-column prop="classTwo" label="二级分类" width="200"  :formatter="formatClassTwos"></el-table-column>
                     <el-table-column fixed="right"              label="操作"      width="143">
                         <template slot-scope="scope">
-                            <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, filds)" type="text" size="small">移除</el-button>
+                            <el-button @click.native.prevent="deleteSelectionTableFileRow(scope.$index, filds)" type="text" size="small">移除</el-button>
                         </template>
                     </el-table-column>
             </el-table-column>
@@ -156,6 +156,7 @@
                 //保存数据
                 //**********************************
                 project: {  //                     *
+                    id:"",
                     endTime:'',//                  *
                     startTime:'',//               *
                     classOne: '',//                *
@@ -195,6 +196,14 @@
             }
         },
         methods: {
+            AddFile(){
+                debugger
+                if(this.project.id == null || this.project.id == ""){
+                    this.messageErrorEdit("请先保存项目文件")
+                }else{
+                    this.outerVisibleFile = true
+                }
+            },
             onSubmit() {
                 console.log('submit!');
             },
@@ -206,10 +215,14 @@
             },
             addZZ(){
                 var _this = this
-                _this.outerVisible = true
-                this.selectSchoolListByIdList(this.project.orgs,function(data){
-                    _this.Org_select = data;
-                })
+                if(this.project.id == null || this.project.id == ""){
+                    this.messageErrorEdit("请先保存项目文件")
+                }else{
+                    _this.outerVisible = true
+                    this.selectSchoolListByIdList(this.project.orgs,function(data){
+                        _this.Org_select = data;
+                    })
+                }
             },
             AddRowFile(){
                 var _this = this
@@ -220,7 +233,16 @@
                     for(let key  in AllPolicyDocument){
                         var value = AllPolicyDocument[key];
                         if(key == "id" && value == selectAllPolicyDocumentData){
-                            _this.filds.push(AllPolicyDocument)
+                            var loginParams = {"AllPolicyDocument":AllPolicyDocument,"proId":_this.project.id};
+                            this.$ajax({
+                                method: 'post',
+                                url: '/api/SaveProjectFile',
+                                data: loginParams
+                            }).then(data => {
+                                if (data.data.code== "true"){
+                                    _this.filds.push(AllPolicyDocument)
+                                }
+                            });
                         }
                     }
                 }
@@ -229,19 +251,31 @@
             addRowSpecialist(){
                 var obj = {};
                 var _this = this
+                var orgCode = _this.pgxx_orgs;
                 var selectSpecialist = _this.selectSpecialist
                 var AllSpecialist = _this.AllSpecialist
+                debugger
                 for ( var i = 0; i <AllSpecialist.length; i++){
                     var AllSpecia = AllSpecialist[i];
                     for(let key  in AllSpecia){
                         var value = AllSpecia[key];
-                       if(key == "code" && value == selectSpecialist){
-                           obj.SpecialistName = AllSpecia.name;
-                           obj.SpecialistId = AllSpecia.id;
-                           obj.SpecialistPhone = AllSpecia.phone;
-                           obj.SpecialistRemarks = AllSpecia.remarks;
-                           obj.SpecialistSchool = _this.pgxx_orgs
-                           _this.SpecialistTable.push(obj)
+                        if(key == "code" && value == selectSpecialist){
+                           var loginParams = {"orgCode":orgCode,"AllSpeciaId":AllSpecia.id,"proId":_this.project.id};
+                           this.$ajax({
+                               method: 'post',
+                               url: '/api/SaveProjectOrgUser',
+                               data: loginParams
+                           }).then(data => {
+                               debugger
+                               if (data.data.code== "true"){
+                                   obj.SpecialistName = AllSpecia.name;
+                                   obj.SpecialistId = AllSpecia.id;
+                                   obj.SpecialistPhone = AllSpecia.phone;
+                                   obj.SpecialistRemarks = AllSpecia.remarks;
+                                   obj.SpecialistSchool = _this.pgxx_orgs
+                                   _this.SpecialistTable.push(obj)
+                               }
+                           });
                        }
                     }
                 }
@@ -250,16 +284,38 @@
             deleteSelectionTableRow(index, rows){
                     rows.splice(index, 1);
             },
+            deleteSelectionTableFileRow(index, rows){
+                debugger
+                var loginParams = {"AllPolicyDocumentId":rows[index].id,"proId":this.project.id};
+                this.$ajax({
+                    method: 'post',
+                    url: '/api/DeleteProjectFile',
+                    data: loginParams
+                }).then(data => {
+                    if (data.data.code== "true"){
+                        rows.splice(index, 1);
+                    }
+                });
+
+
+            },
             SaveProjectData(){
-                var p = this.project;
-                var loginParams = {project:this.project,filds:this.filds,SpecialistTable:this.SpecialistTable};
+                if(this.project.id != ""){
+                    return this.messageErrorEdit("项目已保存")
+                }
+                var _this = this;
+                var orgs = this.project.orgs.join(',');
+                //var loginParams = {project:this.project,filds:this.filds,SpecialistTable:this.SpecialistTable};
+                var loginParams = {project:this.project,orgs:orgs};
                 this.$ajax({
                     method: 'post',
                     url: '/api/SaveProjectData',
                     data: loginParams
                 }).then(data => {
                     if (data.data.code== "true"){
-                        this.$router.push('/xmgl');
+                        _this.messageOk("项目保存成功")
+                        _this.project.id = data.data.data;
+                        //this.$router.push('/xmgl');
                     }
                 });
             },
@@ -277,7 +333,6 @@
                 }
             },
             formatSpecialistSchool(row,column){
-                debugger
                 if(this.Org_select.length>0){
                     return this.formatOrg(this.Org_select,row,"SpecialistSchool");
                 }

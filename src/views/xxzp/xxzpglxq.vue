@@ -35,7 +35,7 @@
             </el-dialog>
         </div>
 
-        <el-table ref="selfEvaluationEntryTable" :data="selfEvaluationEntrys" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="selfEvaluationEntrySelect">
+        <el-table ref="selfEvaluationEntryTable" :data="selfEvaluationEntrys" border tooltip-effect="dark" style="width: 100%;" @selection-change="selfEvaluationEntrySelect">
             <el-table-column label="自评条目">
                 <el-table-column type="selection" width="55"> </el-table-column>
                 <el-table-column prop="title" label="条目标题" ></el-table-column>
