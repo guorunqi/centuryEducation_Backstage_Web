@@ -25,13 +25,13 @@
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增问卷</el-button>
         </div>
-        <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" height="250" style="width: 100%;height: 400px">
+        <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" height="400" style="width: 100%;height: 400px">
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column prop="name" label="问卷名称" width="300"></el-table-column>
-            <el-table-column prop="proName" label="所属项目" width="232"></el-table-column>
+            <el-table-column prop="proName" label="所属项目" width="200"></el-table-column>
             <el-table-column prop="crowdOriented" label="面向人群" width="100" :formatter="formatCrowdOriented"></el-table-column>
             <el-table-column prop="type" label="问卷类型" width="100" :formatter="formatType"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="210">
+            <el-table-column  label="操作" width="210">
                 <template slot-scope="scope">
                     <el-button @click.native.prevent="editQuestionnaire(scope.$index, tableData)" type="text" size="small">编辑问卷</el-button>
                     <el-button @click.native.prevent="deleteQuestionnaire(scope.$index, tableData)" type="text" size="small">删除问卷</el-button>

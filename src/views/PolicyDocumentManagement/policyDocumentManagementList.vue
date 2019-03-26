@@ -41,14 +41,14 @@
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增政策文件</el-button>
         </div>
-        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;height: 400px">
+        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" border  height="400" style="width: 100%">
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column prop="policyName" label="文件名称" width="310"></el-table-column>
             <el-table-column prop="classOne" label="一级分类" width="100" :formatter="formatPolicyDocumentClassOnes"></el-table-column>
             <el-table-column prop="classTwo" label="二级分类" width="100" :formatter="formatPolicyDocumentClassTwos"></el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="130" :formatter="formatCreateTime"></el-table-column>
             <el-table-column prop="updateTime" label="最后修改时间" width="130" :formatter="formatUpdateTime"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="140">
+            <el-table-column  label="操作" width="140">
                 <template slot-scope="scope">
                     <el-button @click.native.prevent="editeProject(scope.$index, tableData)" type="text" size="small">编辑</el-button>
                     <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, tableData)" type="text" size="small">移除</el-button>

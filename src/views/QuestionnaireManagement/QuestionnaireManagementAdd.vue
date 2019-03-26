@@ -28,13 +28,13 @@
             <!-- 新增问题 -->
             <div style="margin-bottom: 15px">
                 <el-button type="primary" icon="plus" @click="outerVisibleFile = true">新增问题</el-button>
-                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData" border tooltip-effect="dark" style="width: 100%;height: 400px">
+                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData" border tooltip-effect="dark" height="300" style="width: 77.6%;">
                     <el-table-column label="问卷问题">
                         <el-table-column type="selection" width="55"> </el-table-column>
                         <el-table-column prop="content" label="问题内容" width="300"></el-table-column>
                         <el-table-column prop="answerType" label="答案类型" width="150" :formatter="formatAnswerType"></el-table-column>
                         <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="150" :formatter="formatExhibitionType"></el-table-column>
-                        <el-table-column fixed="right"              label="操作"      width="100">
+                        <el-table-column label="操作"      width="100">
                             <template slot-scope="scope">
                                 <el-button @click.native.prevent="updataAddQuestionnaires(scope.$index, Questionnaire.QuestionnaireData)" type="text" size="small">修改</el-button>
                                 <el-button @click.native.prevent="deleteAddQuestionnaires(scope.$index, Questionnaire.QuestionnaireData)" type="text" size="small">移除</el-button>
@@ -60,11 +60,11 @@
                     </el-select>
                 </el-form-item>
                 <el-button type="primary" icon="plus" @click="outerAnswer = true">新增问题答案</el-button>
-                <el-table ref="multipleTable" :data="AddQuestionnaires.answerData" border tooltip-effect="dark" style="width: 100%;height: 400px">
+                <el-table ref="multipleTable" :data="AddQuestionnaires.answerData" border tooltip-effect="dark" height="200" style="width: 97%;">
                     <el-table-column prop="code" label="选项代码" width="300"></el-table-column>
                     <el-table-column prop="content" label="选项内容" width="150"></el-table-column>
                     <el-table-column prop="" label="选择率" width="150"></el-table-column>
-                    <el-table-column fixed="right"              label="操作"      width="80">
+                    <el-table-column label="操作"      width="80">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="deleteAnswerData(scope.$index, AddQuestionnaires.answerData)" type="text" size="small">移除</el-button>
                         </template>

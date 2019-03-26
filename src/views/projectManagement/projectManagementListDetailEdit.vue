@@ -54,7 +54,7 @@
                 </div>
             </el-dialog>
         </div>
-        <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" style="width: 100%;height: 400px">
+        <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" height="350" style="width: 76%;">
                 <el-table-column label="相关文件">
                     <el-table-column type="selection" width="55"> </el-table-column>
                     <el-table-column prop="policyName" label="文件名称" width="300"></el-table-column>
@@ -105,7 +105,7 @@
             </el-dialog>
         </div>
 
-        <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px">
+        <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" height="350" style="width: 90.5%">
             <el-table-column label="涉及专家">
                 <el-table-column type="selection"                        width="55"></el-table-column>
                 <el-table-column prop="OrgCode"        label="评估学校"  width="300"></el-table-column>

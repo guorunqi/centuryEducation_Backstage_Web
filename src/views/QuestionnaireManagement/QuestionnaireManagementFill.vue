@@ -29,12 +29,12 @@
 
         </el-form>
             <div style="margin-bottom: 15px">
-                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData"  tooltip-effect="dark" style="width:100%;height: 330px">
+                <el-table ref="multipleTable" :data="Questionnaire.QuestionnaireData" border  tooltip-effect="dark" height="300" style="width:100%;">
                     <el-table-column type="selection" width="60"> </el-table-column>
                     <el-table-column prop="content" label="问题内容" width="400"></el-table-column>
                     <el-table-column prop="answerType" label="答案类型" width="200"></el-table-column>
                     <el-table-column prop="exhibitionType" label="汇总问卷展示类型" width="200"></el-table-column>
-                    <el-table-column fixed="right"              label="操作"      width="120">
+                    <el-table-column label="操作"      width="120">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="FillAnswer(scope.$index, Questionnaire.QuestionnaireData)" type="text" size="small">答案填写</el-button>
 
@@ -47,24 +47,24 @@
                 <el-form-item label="问题内容：">
                     <el-input type="textarea" :rows="2" width="100" placeholder="问题内容" v-model="AddQuestionnaires.content"></el-input>
                 </el-form-item>
-                <el-form-item label="汇总问卷展示类型：">
+                <el-form-item label="">&nbsp;汇总问卷展示类型：
                     <el-select v-model="AddQuestionnaires.exhibitionType" placeholder="汇总问卷展示类型">
                         <el-option v-for="item in exhibitionTypes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="答案类型：">
+                <el-form-item label="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;答案类型：
                     <el-select v-model="AddQuestionnaires.answerType" placeholder="答案类型">
                         <el-option v-for="item in answerTypes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-button type="primary" icon="plus" @click="outerAnswer = true">新增问题答案</el-button>
-                <el-table ref="multipleTable" :data="AddQuestionnaires.answerData" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+                <el-table ref="multipleTable" :data="AddQuestionnaires.answerData" border tooltip-effect="dark" height="250" style="width: 97%;">
                     <el-table-column prop="code" label="选项代码" width="300"></el-table-column>
                     <el-table-column prop="content" label="选项内容" width="150"></el-table-column>
-                    <el-table-column prop="selectionRate" label="选择率" width="150"></el-table-column>
-                    <el-table-column fixed="right"              label="操作"      width="80">
+                    <el-table-column prop="selectionRate" label="选择率（%）" width="150"></el-table-column>
+                    <el-table-column label="操作"      width="80">
                         <template slot-scope="scope">
-                            <el-button @click.native.prevent="EditAnswerData(scope.$index, AddQuestionnaires.answerData)" type="text" size="small">编辑</el-button>
+                            <el-button @click.native.prevent="EditAnswerData(scope.$index, AddQuestionnaires.answerData)" type="text" size="small">结果填写</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -77,7 +77,7 @@
         <el-dialog :visible.sync="outEditAnswer">
             <el-form ref="form" :model="AddQuestionnaires" label-width="auto">
                 <el-form-item label="选择率：">
-                    <el-input-number v-model="SelectPro" controls-position="right" @change="handleChange" :min="1" :max="100"></el-input-number>
+                    <el-input-number v-model="SelectPro" controls-position="right" :min="1" :max="100"></el-input-number>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -115,6 +115,7 @@
                     SelectPro:""
                 },
                 Questionnaire:{
+                    ProjectOrgData:[],
                     Org:"",
                     remarks:"",
                     QuestionnaireData:[],
@@ -137,32 +138,42 @@
         },
         methods: {
             FillAnswer:function(index, rows){
+                if(this.Questionnaire.Org == null || this.Questionnaire.Org == "" || this.Questionnaire.Org == undefined){
+                    return this.messageErrorEdit("请先选择学校")
+                }
+                debugger
+                var ProjectOrgData = this.Questionnaire.ProjectOrgData;
                 var row = rows[index];
-                if (this.Questionnaire.Org == undefined)return
+                var org = this.getorg(this.OrgData,this.Questionnaire.Org);
+                var ProjectOrgId = this.getProjectOrg(org.id,ProjectOrgData);
                 this.outerVisibleFile = true;
                 this.AddQuestionnaires.answerType = row.answerType;
                 this.AddQuestionnaires.content = row.content;
                 this.AddQuestionnaires.exhibitionType = row.exhibitionType;
                 this.AddQuestionnaires.answerData = row.answerData;
+                for (var i=0;i<this.AddQuestionnaires.answerData.length;i++){
+                    var AnswerResult = this.getSelectionRate(row.AnswerResultData,ProjectOrgId,this.AddQuestionnaires.answerData[i].id);
+                    this.AddQuestionnaires.answerData[i].selectionRate =AnswerResult.selectionRate
+                }
             },
             SaveEditAnswer:function(){
+                debugger
+                var data = {}
                 var row = this.AddQuestionnaires.answerData[this.AnswerIndex];
-                this.answerDatas = row;
-                this.answerDatas.selectionRate = this.SelectPro;
-                row = this.answerDatas;
-                var Org = this.Questionnaire.Org;
-                for (var i=0;i<this.OrgData.length;i++){
-                    var org = this.OrgData[i];
-                    if(org.code == Org){
-                        row.org = org;
-                    }
-                }
+                this.AddQuestionnaires.answerData[this.AnswerIndex].selectionRate = this.SelectPro;
+                /*row = this.answerDatas;
+                var org = this.getorg(this.OrgData,this.Questionnaire.Org);*/
                 this.outEditAnswer =false;
+                /*for (var i=0;i<this.AddQuestionnaires.answerData.length;i++){
+
+                    this.AddQuestionnaires.answerData[i].selectionRate =
+                }*/
             },
             closeQuestionnaire:function(){
                 this.$router.push('/wjgl');
             },
             EditAnswerData:function(index, rows){
+                debugger
                 var row = rows[index];
                 this.outEditAnswer = true;
                 this.AnswerIndex = index;
@@ -181,6 +192,7 @@
                 });
             },
             saveSelectionRate:function(){
+                debugger
                 var _this = this;
                 this.$ajax({method: 'post',
                     url:'/api/saveSelectionRate',
@@ -198,6 +210,7 @@
                 });
             },
             initData:function(){
+                debugger
                 var QuestionnaireId = this.id;
                 var _this = this
                 var loginParams = {"QuestionnaireId":QuestionnaireId};
@@ -207,12 +220,38 @@
                     data: qs.stringify(loginParams)
                 }).then(data => {
                     if (data.data.code== "true"){
+                        debugger
                         _this.Questionnaire = data.data.data;
                         _this.Questionnaire.proId = data.data.data.projectId;
                         _this.Questionnaire.QuestionnaireData = _this.objectToArr(data.data.data.QuestionnaireData);
                         _this.OrgData = data.data.data.OrgData;
+                        _this.Questionnaire.ProjectOrgData = data.data.data.ProjectOrgData;
                     }
                 });
+            },
+            getorg(data,OrgName){
+                debugger
+                for (var i=0;i<data.length;i++){
+                    var org = data[i];
+                    if(org.name == OrgName){
+                        return org;
+                    }
+                }
+            },
+            getSelectionRate(data,ProjectOrgId,id){
+                debugger
+                for(var i=0;i<data.length;i++){
+                    if(data[i].answerId == id && data[i].projectOrgId == ProjectOrgId){
+                        return data[i];
+                    }
+                }
+            },
+            getProjectOrg(orgId,ProjectData){
+                for(var i=0;i<ProjectData.length;i++){
+                    if(ProjectData[i].orgId == orgId){
+                        return ProjectData[i].id;
+                    }
+                }
             }
         },
         mounted() {

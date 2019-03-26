@@ -48,7 +48,7 @@
                         <el-button @click="outerVisibleFile = false">取 消</el-button>
                     </div>
                 </el-dialog>
-            </div>
+            </div>i
 
             <div slot="footer" class="dialog-footer" style="margin-left: 10%;">
 

@@ -23,15 +23,9 @@
                     <el-option v-for="item in classTwos" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                 </el-select>
             </el-form-item>
-
-
-
-
             <el-form-item label="结束时间">
                 <el-date-picker type="date" placeholder="选择日期" v-model="project.endTime" style="width: 100%;" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
-
-
         </el-form>
         <!-- 相关文件 -->
         <div style="margin-bottom: 15px">
@@ -60,13 +54,13 @@
                 </div>
             </el-dialog>
         </div>
-        <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" :data="filds" border tooltip-effect="dark" height="350" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column label="相关文件">
-                    <el-table-column type="selection" width="55"> </el-table-column>
+                    <el-table-column type="selection" width="45"> </el-table-column>
                     <el-table-column prop="policyName" label="文件名称" width="400"></el-table-column>
                     <el-table-column prop="classOne" label="一级分类" width="200" :formatter="formatClassOnes"></el-table-column>
                     <el-table-column prop="classTwo" label="二级分类" width="200"  :formatter="formatClassTwos"></el-table-column>
-                    <el-table-column fixed="right"              label="操作"      width="143">
+                    <el-table-column  label="操作"      width="140">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="deleteSelectionTableFileRow(scope.$index, filds)" type="text" size="small">移除</el-button>
                         </template>
@@ -111,14 +105,14 @@
             </el-dialog>
         </div>
 
-        <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" style="width: 100%;height: 400px" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" :data="SpecialistTable" border type=index tooltip-effect="dark" height="350" style="width: 100%;" @selection-change="handleSelectionChange">
             <el-table-column label="涉及专家">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="SpecialistSchool"    label="评估学校"  width="393" :formatter="formatSpecialistSchool"></el-table-column>
                 <el-table-column prop="SpecialistName"      label="姓名"      width="150" ></el-table-column>
                 <el-table-column prop="SpecialistPhone"     label="电话"      width="150"></el-table-column>
                 <el-table-column prop="SpecialistRemarks"   label="备注"      width="150"></el-table-column>
-                <el-table-column fixed="right"              label="操作"      width="100">
+                <el-table-column  label="操作"      width="100">
                     <template slot-scope="scope">
                         <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, SpecialistTable)" type="text" size="small">移除</el-button>
                     </template>

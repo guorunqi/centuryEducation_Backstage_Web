@@ -34,14 +34,14 @@
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增</el-button>
         </div>
-        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%;">
+        <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" height="370" style="width: 92.5%;">
             <el-table-column type="selection" width="34"></el-table-column>
             <el-table-column prop="name" label="项目名称" width="250"></el-table-column>
             <el-table-column prop="classOne" label="一级分类" width="110" :formatter="formatClassOnes"></el-table-column>
             <el-table-column prop="classTwo" label="二级分类" width="110" :formatter="formatClassTwos"></el-table-column>
             <el-table-column prop="org" label="机构名称" width="220"></el-table-column>
             <el-table-column prop="stutas" label="状态" width="80" :formatter="formatStatus"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="100">
+            <el-table-column  label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button @click.native.prevent="editeProject(scope.$index, tableData)" type="text" size="small">编辑</el-button>
                     <el-button @click.native.prevent="deleteSelectionTableRow(scope.$index, tableData)" type="text" size="small">移除</el-button>
