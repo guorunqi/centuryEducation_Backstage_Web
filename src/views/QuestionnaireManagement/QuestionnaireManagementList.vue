@@ -93,12 +93,14 @@
         },
         methods: {
             init(){
+                debugger
                 var _this = this
                 var loginParams = {"name":this.questionnaire.name,"proName":this.questionnaire.project.proName,"crowdOriented":this.questionnaire.crowdOriented,"type":this.questionnaire.type}
                 _this.AjaxJson("QuestionnaireManagementLoad",loginParams,
                     function(data){
                         if (data.data.code== "true"){
                             _this.tableData = data.data.data;
+                            debugger
                         }
                     });
             },

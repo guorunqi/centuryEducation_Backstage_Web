@@ -34,7 +34,7 @@
         <div style="margin-bottom: 15px">
             <el-button size="" @click="add">新增</el-button>
         </div>
-        <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" height="370" style="width: 92.5%;">
+        <el-table ref="multipleTable" border :data="tableData" tooltip-effect="dark" height="330" style="width: 97%;">
             <el-table-column type="selection" width="34"></el-table-column>
             <el-table-column prop="name" label="项目名称" width="250"></el-table-column>
             <el-table-column prop="classOne" label="一级分类" width="110" :formatter="formatClassOnes"></el-table-column>
