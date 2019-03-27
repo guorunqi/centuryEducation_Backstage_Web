@@ -79,7 +79,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="编码 *" prop="code">
-                            <el-input v-model="org.code" auto-complete="off" style="width: 80%;"></el-input>
+                            <el-input v-model="org.code" auto-complete="off" style="width: 80%;" v-bind:disabled="codeSign"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -239,7 +239,8 @@
                 addUserForm:{},
                 selectUsers:[],
                 addUserLoading:false,
-                options:[]
+                options:[],
+                codeSign:false
             }
         },
         methods:{
@@ -278,7 +279,9 @@
 
             },
             addSonOrg(){
+                this.org.id="";
                 var checkNodes=this.clickNode;
+                this.codeSign=false;
                 if(checkNodes.id==null){
                     this.$message({
                         showClose: true,
@@ -291,6 +294,7 @@
                 }
             },
             updateOrg(){
+                this.codeSign=true;
                 var checkNodes=this.clickNode;
                 if(checkNodes.id==null){
                     this.$message({
@@ -337,10 +341,12 @@
                 }
             },
             showFrom(){
+                this.org.id="";
+                this.codeSign=false;
                 this.addFormVisible=true;
             },
-            saveOrg(){
-                if(this.org.code==null||this.org.code==''){
+            saveOrg(){debugger
+                if(this.org.code==null||this.org.code==''||this.org.code==0){
                     this.$message.error('机构编码为必填项！');
                 }else{
                     this.$ajax({method: 'post',
@@ -356,6 +362,7 @@
 
                             this.queryOrgTreeData();
                             this.clickNode={};
+
                         }else {
                             this.$message.error(data.data.data);
                         }

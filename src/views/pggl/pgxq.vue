@@ -123,8 +123,8 @@
                                     专家:
                                 </el-col>
                                 <el-col :span="4">
-                                    <el-select v-model="quotaOrgUser.userID" placeholder="请选择">
-                                        <el-option v-for="expert in experts" :key="expert.id" :label="expert.name" :value="expert.id"></el-option>
+                                    <el-select v-model="quotaOrgUser.userId" placeholder="请选择">
+                                        <el-option v-for="expert in experts" :key="expert.user_id" :label="expert.name" :value="expert.user_id"></el-option>
                                     </el-select>
                                 </el-col>
                             </el-row>
@@ -425,7 +425,7 @@
                     this.quota={};
                     this.queryQuota();
                 }else {
-                    this.$message.error('操作数据失败！请联系管理员。');
+                    this.$message.error(data.data.message);
                 }
             });
         },
@@ -507,10 +507,11 @@
             if(assessment.id==null||assessment.id==""){
                 this.$message({
                     showClose: true,
-                    message: '请先保存自评',
+                    message: '请先保存评估',
                     type: 'warning'
                 });
             }else{
+                this.quota={};
                 this.queryExpert();
                 this.queryProjectOrgUser();
                 this.quota.assessmentId=assessment.id;
@@ -538,6 +539,7 @@
                     this.queryQuota();
                     this.queryQuotaSelfEvaluationEntrys();
                     this.queryPolicyDocumentEntrys();
+                    this.queryProblems();
 
                     this.scoringTypeChange(this.assessment.scoringType);
                     if(this.assessment.scoringType=='0'){
@@ -655,6 +657,7 @@
         saveProjectOrgUsers(){
             for(var i=0;i<this.quotaOrgUsers.length;i++){
                 this.quotaOrgUsers[i].quotaId=this.quota.id;
+                this.quotaOrgUsers[i].expertId=this.quotaOrgUsers[i].userId;
             }
             this.$ajax({
                 method: 'post',
@@ -693,16 +696,20 @@
         },
         //指标树指标新增
         TreeAddSubordinatePolicyDocument(data){
-
+            this.quota={};
             var hierarchy=data.exped2;
             if(hierarchy=='A'){
                 this.quota.hierarchy='B';
                 this.quota.pid = data.id;
+                this.queryExpert();
+                this.queryProjectOrgUser();
                 this.outerVisibleFile = true;
                 this.quota.assessmentId=this.assessment.id;
             }else if(hierarchy=='B'){
                 this.quota.hierarchy='C';
                 this.quota.pid = data.id;
+                this.queryExpert();
+                this.queryProjectOrgUser();
                 this.outerVisibleFile = true;
                 this.quota.assessmentId=this.assessment.id;
             }else if(hierarchy=='C'){
@@ -755,6 +762,8 @@
                     _this.querySelfEvaluationEntrys();
                     _this.queryDocumentEntrys();
                     _this.queryQuotaProblems();
+                    _this.queryExpert();
+                    _this.queryProjectOrgUser();
                     _this.outerVisibleFile = true;
                 }else {
                     _this.$message.error('获取数据失败！请联系管理员。');
@@ -763,6 +772,7 @@
         },
         //指标关联自评新增页面打开
         addSelfEvaluationEntry(){
+            this.titleName="";
             this.quotaSelfEvaluationEntry=true;
         },
         //指标关联自评删除
@@ -785,6 +795,7 @@
         },
         //指标关联自评新增保存
         saveQuotaSelfEvaluationEntryFrom(){
+            var _this=this;
             var titleName=this.titleName;
             if(titleName!=null&&titleName!=""){
                 this.$ajax({
@@ -972,7 +983,7 @@
 
         },
         //根据项目id获取可选的指标问卷问题
-        queryProblems(){
+        queryProblems(){debugger
             var _this = this;
             this.$ajax({
                 method: 'post',

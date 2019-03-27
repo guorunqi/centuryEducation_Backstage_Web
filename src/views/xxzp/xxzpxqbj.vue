@@ -36,7 +36,7 @@
             </el-dialog>
         </div>
 
-        <el-table ref="selfEvaluationEntryTable" :data="selfEvaluationEntrys" highlight-current-row border tooltip-effect="dark" style="width: 100%;" @current-change="handleCurrentChange">
+        <el-table ref="selfEvaluationEntryTable" :data="selfEvaluationEntrys" highlight-current-row border tooltip-effect="dark" style="width: 100%;" max-height="400" @current-change="handleCurrentChange">
             <el-table-column label="自评条目">
                 <el-table-column prop="title" label="条目标题" ></el-table-column>
             </el-table-column>
@@ -327,7 +327,11 @@
                 data:{data:JSON.stringify({selfEvaluationEntryId:val.id,projectOrgId:this.selectProjectOrg.id})}
             }).then(data => {
                 this.selfEvaluationEntryResult=data.data.data;
-                this.setUEContent(data.data.data.resultContent);
+                if(data.data.data.resultContent!=null&&data.data.data.resultContent!="") {
+                    this.setUEContent(data.data.data.resultContent);
+                }else{
+                    this.setUEContent("");
+                }
             });
         },
         saveSelfEvaluationEntryResult(){debugger
