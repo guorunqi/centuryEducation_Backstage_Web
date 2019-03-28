@@ -44,23 +44,22 @@
         <el-dialog title="添加问题" :visible.sync="outerVisibleFile">
             <el-form ref="form" :model="problemData" label-width="auto">
                 <el-form-item label="问题内容：">
-                    <el-input type="textarea" :rows="2" width="100" placeholder="问题内容" v-model="problemData.content"></el-input>
+                    <el-input type="textarea" :rows="2" width="100" placeholder="问题内容" :disabled="true" v-model="problemData.content"></el-input>
                 </el-form-item>
                 <el-form-item label="">&nbsp;汇总问卷展示类型：
-                    <el-select v-model="problemData.exhibitionType" placeholder="汇总问卷展示类型">
-                        <el-option v-for="item in exhibitionTypes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
+                    <el-select v-model="problemData.exhibitionType" disabled placeholder="汇总问卷展示类型">
+                        <el-option v-for="item in exhibitionTypes" :key="item.dictId"  :label="item.dictName" :value="item.dictId"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;答案类型：
-                    <el-select v-model="problemData.answerType" placeholder="答案类型">
+                    <el-select v-model="problemData.answerType" disabled placeholder="答案类型">
                         <el-option v-for="item in answerTypes" :key="item.dictId" :label="item.dictName" :value="item.dictId"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-button type="primary" icon="plus" @click="outerAnswer = true">新增问题答案</el-button>
                 <el-table ref="multipleTable" :data="answerDatas" border tooltip-effect="dark" height="250" style="width: 97%;">
                     <el-table-column prop="code" label="选项代码" width="300"></el-table-column>
                     <el-table-column prop="content" label="选项内容" width="150"></el-table-column>
-                    <el-table-column prop="selectionRate" label="选择率（%）" width="150"></el-table-column>
+                    <el-table-column prop="selection_rate" label="选择率（%）" width="150"></el-table-column>
                     <el-table-column label="操作"      width="80">
                         <template slot-scope="scope">
                             <el-button @click.native.prevent="EditAnswerData(scope.$index, answerDatas)" type="text" size="small">结果填写</el-button>
@@ -162,6 +161,7 @@
         },
         methods: {
             FillAnswer:function(index, rows){
+debugger
                 var _this = this
                 if(this.SelectOrg == null || this.SelectOrg == "" || this.SelectOrg == undefined){
                     return this.messageErrorEdit("请先选择学校")
@@ -249,9 +249,10 @@
                 }).then(data => {
                     if (data.data.code == "true") {
                         debugger
+                        _this.AnswerResult.id = data.data.data
                         _this.answerDatas = [];
                         _this.FillAnswer(_this.index,_this.rows);
-
+                        _this.outEditAnswer = false
                     } else {
                         this.$message.error('数据保存失败！请联系管理员。');
                     }
@@ -274,6 +275,8 @@
                 this.$router.push('/wjgl');
             },
             EditAnswerData:function(index, rows){
+                debugger
+                this.AnswerResult.id = rows[index].result_id
                 this.outEditAnswer = true;
                 this.AnswerIndex = index;
             },
