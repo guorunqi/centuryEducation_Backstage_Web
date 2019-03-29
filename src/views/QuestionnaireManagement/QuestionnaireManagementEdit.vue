@@ -288,12 +288,12 @@
                 var _this = this
                 this.$ajax({
                     method: 'post',
-                    url: '/api/LoadAnswer',
+                    url: '/api/LoadAnswer1',
                     data: {data: JSON.stringify(rows[index])}
                 }).then(data => {
                     if (data.data.code == "true") {
-                        debugger
                         _this.Question.id = rows[index].id;
+                        _this.answerData.problemId = rows[index].id;
                         _this.Question.questionnaireId = rows[index].questionnaireId;
                         _this.Question.exhibitionType = rows[index].exhibitionType;
                         _this.Question.content = rows[index].content;

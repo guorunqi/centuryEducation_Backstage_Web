@@ -161,12 +161,10 @@
         },
         methods: {
             FillAnswer:function(index, rows){
-debugger
                 var _this = this
                 if(this.SelectOrg == null || this.SelectOrg == "" || this.SelectOrg == undefined){
                     return this.messageErrorEdit("请先选择学校")
                 }
-
                 var org = this.getorg(this.OrgData,this.SelectOrg);
                 var projectOrgId = this.getProjectOrg(org.id);
                 var problem = rows[index];

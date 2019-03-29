@@ -236,7 +236,7 @@
             updataAddQuestionnaires:function(index, rows){
                 var _this = this
                 this.$ajax({method: 'post',
-                    url:'/api/LoadAnswer',
+                    url:'/api/LoadAnswer1',
                     data:{data:JSON.stringify(rows[index])}
                 }).then(data =>{
                     if(data.data.code=="true"){
