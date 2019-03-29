@@ -62,7 +62,7 @@
                     <el-table-column prop="selection_rate" label="选择率（%）" width="150"></el-table-column>
                     <el-table-column label="操作"      width="80">
                         <template slot-scope="scope">
-                            <el-button @click.native.prevent="EditAnswerData(scope.$index, answerDatas)" type="text" size="small">结果填写</el-button>
+                                <el-button @click.native.prevent="EditAnswerData(scope.$index, answerDatas)" type="text" size="small">结果填写</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -232,6 +232,7 @@
                 }
             },
             SaveEditAnswer:function(){
+                debugger
                 var org = this.getorg(this.OrgData,this.SelectOrg);
                 var projectOrgId = this.getProjectOrg(org.id);
 
@@ -273,8 +274,12 @@
                 this.$router.push('/wjgl');
             },
             EditAnswerData:function(index, rows){
-                debugger
                 this.AnswerResult.id = rows[index].result_id
+                this.AnswerResult.selectionRate = 0
+                if(rows[index].selection_rate == null || rows[index].selection_rate == ""){
+                    this.AnswerResult.selectionRate = 0
+                }
+                this.AnswerResult.selectionRate = parseFloat(rows[index].selection_rate)
                 this.outEditAnswer = true;
                 this.AnswerIndex = index;
             },
