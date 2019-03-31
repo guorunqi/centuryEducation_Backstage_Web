@@ -181,6 +181,7 @@
                     debugger
                     if (data.data.code== "true"){
                         _this.Questionnaire.id = data.data.data.id;
+                        _this.Question.questionnaireId = data.data.data.id;
                         _this.Questionnaire.remarks = data.data.data.remarks;
                         _this.Questionnaire.name = data.data.data.name;
                         _this.Questionnaire.projectId = data.data.data.projectId;
@@ -202,6 +203,7 @@
                 if (this.Questionnaire.id == "" || this.Questionnaire.id == null) {
                     return this.messageErrorEdit("请先保存问卷")
                 }
+                this.Question.id = ""
                 this.outerVisibleFile = true
             },
             //保存问题答案
