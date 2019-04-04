@@ -178,7 +178,6 @@
                     url: '/api/EditQuestionnaireManagementLoad',
                     data:{data: JSON.stringify({"QuestionnaireId":QuestionnaireId})}
                 }).then(data => {
-                    debugger
                     if (data.data.code== "true"){
                         _this.Questionnaire.id = data.data.data.id;
                         _this.Question.questionnaireId = data.data.data.id;

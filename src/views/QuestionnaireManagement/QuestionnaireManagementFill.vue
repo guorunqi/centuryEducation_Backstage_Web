@@ -75,7 +75,7 @@
         <el-dialog :visible.sync="outEditAnswer">
             <el-form ref="form" :model="AnswerResult" label-width="auto">
                 <el-form-item label="选择率：">
-                    <el-input-number v-model="AnswerResult.selectionRate" controls-position="right" :min="1" :max="100"></el-input-number>
+                    <el-input v-model="AnswerResult.selectionRate" @blur="RateBlur"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -103,16 +103,6 @@
                 outerVisibleFile:false,
                 index:0,
                 rows:[],
-                /*
-                SelectPro:0,
-
-
-
-                index:"",
-                outerAnswer:false,
-
-                */
-                //answerDatas:[],
                 //选择率表
                 AnswerResult:{
                     id:"",
@@ -120,13 +110,6 @@
                     projectOrgId:"",
                     selectionRate:"",
                 },
-                /*AddQuestionnaires: {
-                    answerData:[],
-                    exhibitionType: "",
-                    content:"",
-                    answerType:"",
-                    SelectPro:""
-                },*/
                 answerDatas:[],
                 problemData:{
                     id:"",
@@ -147,10 +130,6 @@
                     type:"",
                     remarks:"",
                 },
-                /*answerDatas:{
-                    content:"",
-                    code:""
-                },*/
                 OrgData:[],
                 Project:[],
                 exhibitionTypes:[],
@@ -186,45 +165,21 @@
                         _this.index = index;
                     }
                 });
-               /* this.$ajax({
-                    method: 'post',
-                    url: '/api/LoadAnswer',
-                    data: {data: JSON.stringify(rows[index])}
-                }).then(data => {
-                    if (data.data.code == "true") {
-                        debugger
-                        _this.problemData.id = rows[index].id;
-                        _this.problemData.questionnaireId = rows[index].questionnaireId;
-                        _this.problemData.exhibitionType = rows[index].exhibitionType;
-                        _this.problemData.content = rows[index].content;
-                        _this.problemData.answerType = rows[index].answerType;
-                        _this.answerDatas = data.data.data
-                        _this.outerVisibleFile = true;
-                        _this.rows = rows;
-                        _this.index = index;
-                    } else {
-                        this.$message.error('增加数据失败！请联系管理员。');
-                    }
-                });*/
-
-
-                /*var ProjectOrgData = this.ProjectOrgData;
-                var row = rows[index];
-                var org = this.getorg(this.OrgData,this.Questionnaire.Org);
-                var ProjectOrgId = this.getProjectOrg(org.id,ProjectOrgData);
-                this.AddQuestionnaires.answerType = row.answerType;
-                this.AddQuestionnaires.content = row.content;
-                this.AddQuestionnaires.exhibitionType = row.exhibitionType;
-                this.AddQuestionnaires.answerData = row.answerData;
-                for (var i=0;i<this.AddQuestionnaires.answerData.length;i++){
-                    var AnswerResult = this.getSelectionRate(row.AnswerResultData,ProjectOrgId,this.AddQuestionnaires.answerData[i].id);
-                    this.AddQuestionnaires.answerData[i].selectionRate =AnswerResult.selectionRate
-                }*/
             },
             formatAnswerType: function (row, column) {
                 if (this.answerTypes.length > 0) {
                     return this.formatData(this.answerTypes, row, "answerType");
                 }
+            },
+            RateBlur:function(){
+                var Rate = parseFloat(this.AnswerResult.selectionRate);
+                if(Rate<0 || Rate>100 || isNaN(Rate)){
+                    this.messageErrorEdit("请输入0～100的数字");
+                    this.AnswerResult.selectionRate = 0;
+                    return false;
+                }
+                this.AnswerResult.selectionRate = Rate.toFixed(2);
+                return true;
             },
             formatExhibitionType: function (row, column) {
                 if (this.exhibitionTypes.length > 0) {
@@ -232,10 +187,8 @@
                 }
             },
             SaveEditAnswer:function(){
-                debugger
                 var org = this.getorg(this.OrgData,this.SelectOrg);
                 var projectOrgId = this.getProjectOrg(org.id);
-
                 var row = this.answerDatas[this.AnswerIndex];
                 this.AnswerResult.answerId = row.id
                 this.AnswerResult.projectOrgId = projectOrgId;
@@ -247,7 +200,6 @@
                     data: {data: JSON.stringify(this.AnswerResult)}
                 }).then(data => {
                     if (data.data.code == "true") {
-                        debugger
                         _this.AnswerResult.id = data.data.data
                         _this.answerDatas = [];
                         _this.FillAnswer(_this.index,_this.rows);
@@ -256,19 +208,6 @@
                         this.$message.error('数据保存失败！请联系管理员。');
                     }
                 });
-
-
-                //var data = {}
-
-
-                //this.AddQuestionnaires.answerData[this.AnswerIndex].selectionRate = this.SelectPro;
-                //row = this.answerDatas;
-                /*var org = this.getorg(this.OrgData,this.Questionnaire.Org);
-                this.outEditAnswer =false;
-                for (var i=0;i<this.AddQuestionnaires.answerData.length;i++){
-
-                    this.AddQuestionnaires.answerData[i].selectionRate =
-                }*/
             },
             closeQuestionnaire:function(){
                 this.$router.push('/wjgl');
@@ -296,23 +235,6 @@
                     }
                 });
             },
-            /*saveSelectionRate:function(){
-                var _this = this;
-                this.$ajax({method: 'post',
-                    url:'/api/saveSelectionRate',
-                    data:{data:JSON.stringify(this.AddQuestionnaires.answerData)}
-                }).then(data =>{
-                    if(data.data.code=="true"){
-                        this.$message({
-                            message: '保存数据成功！',
-                            type: 'success'
-                        });
-                        _this.closeQuestionnaire();
-                    }else {
-                        this.$message.error('增加数据失败！请联系管理员。');
-                    }
-                });
-            },*/
             initData:function(){
                 var QuestionnaireId = this.id;
                 var _this = this
@@ -342,14 +264,6 @@
                     }
                 }
             },
-            /*getSelectionRate(data,ProjectOrgId,id){
-                debugger
-                for(var i=0;i<data.length;i++){
-                    if(data[i].answerId == id && data[i].projectOrgId == ProjectOrgId){
-                        return data[i];
-                    }
-                }
-            },*/
             getProjectOrg(orgId){
                 for(var i=0;i<this.ProjectOrgData.length;i++){
                     if(this.ProjectOrgData[i].orgId == orgId){
