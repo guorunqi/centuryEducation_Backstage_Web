@@ -5,9 +5,11 @@
 				{{collapsed?'':sysName}}
 			</el-col>
 			<el-col :span="10">
+				<!--
 				<div class="tools" @click.prevent="collapse">
 					<i class="fa fa-align-justify"></i>
 				</div>
+				-->
 			</el-col>
 			<el-col :span="4" class="userinfo">
 				<el-dropdown trigger="hover">
@@ -24,7 +26,7 @@
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
 				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
-					 unique-opened router v-show="!collapsed">
+					 unique-opened router v-show="!collapsed" style="width: 100%">
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
@@ -75,7 +77,7 @@
 	export default {
 		data() {
 			return {
-				sysName:'世纪教育',
+				sysName:'兑达教育科技',
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',
