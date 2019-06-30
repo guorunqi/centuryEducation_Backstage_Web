@@ -21,27 +21,25 @@
             <el-button size="" @click="add">新建评估</el-button>
             <el-button size="" @click="edite">编辑评估</el-button>
             <el-button size="" @click="editeData">查看评估结果</el-button>
+            <el-dialog title="查看评估结果" :visible.sync="outerVisibleFile">
+                <el-table ref="assessmentResultTable" :data="assessmentResultData" tooltip-effect="dark"  style="width: 82%;height: 400px;margin: 0 auto;margin-top: 10px;">
+                    <el-table-column prop="orgName" label="机构名称" ></el-table-column>
+                    <el-table-column prop="total_score" label="评估结果" :formatter="formatType"></el-table-column>
+                    <el-table-column  label="操作" width="210">
+                        <template slot-scope="scope">
+                            <el-button @click.native.prevent="openAssessmentResultDetails(scope.$index, assessmentResultData)" type="text" size="small">查看详情</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-dialog>
             <el-button size="" @click="deleteAssessments">删除评估</el-button>
         </div>
         <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" @selection-change="selectAssessmentsChange" style="width: 82%;height: 400px;margin: 0 auto;margin-top: 10px;">
             <el-table-column type="selection" width="55"> </el-table-column>
-            <el-table-column prop="name" label="评估名称" ></el-table-column>
+            <el-table-column prop="name" label="学校名称" ></el-table-column>
             <el-table-column prop="projectname" label="所属项目" ></el-table-column>
             <el-table-column prop="scoring_type" label="打分类型" :formatter="formatType"></el-table-column>
         </el-table>
-        <!-- <div class="block">
-             <el-pagination
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="currentPage4"
-                     :page-sizes="[100, 200, 300, 400]"
-                     :page-size="100"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="200"
-                     width="1000px">
-
-             </el-pagination>
-         </div>-->
     </div>
 </template>
 
@@ -60,6 +58,8 @@
             },
             tableData:[],
             selectAssessments:[],
+            outerVisibleFile:false,
+            assessmentResultData:[],
             scoringTypes:[
                 {
                     id:'0',
@@ -117,7 +117,8 @@
             }
         },
         editeData(){
-            var selfEvaluations=this.selfEvaluations;
+            var _this = this;
+            var selfEvaluations=this.selectAssessments;
             if(selfEvaluations.length!=1){
                 this.$message({
                     showClose: true,
@@ -125,13 +126,38 @@
                     type: 'warning'
                 });
             }else{
-                var id=selfEvaluations[0].id;
-                this.$router.push({ name: '自评信息编辑',
+
+                this.$ajax({
+                    method: 'post',
+                    url: '/api/queryAssessmentScore',
+                    data: {assessmentId:selfEvaluations[0].id}
+                }).then(data=>{
+                    if(data.data.code=="true"){
+                        _this.assessmentResultData=data.data.data;
+                        _this.outerVisibleFile=true;
+                    }else {
+                        _this.$message.error('获取数据失败！请联系管理员。');
+                    }
+                });
+
+
+//                var id=selfEvaluations[0].id;
+//                this.$router.push({ name: '自评信息编辑',
+//                    params: {
+//                        id : id,
+//                    }
+//                })
+            }
+        },
+        openAssessmentResultDetails:function(index, rows){
+            var row = rows[index];
+            var id=row.projectOrgId;
+            this.$router.push({ name: '评估结果',
                     params: {
                         id : id,
+                        assessmentId:row.assessmentId,
                     }
                 })
-            }
         },
         selectAssessmentsChange(val){
             this.selectAssessments=val;
